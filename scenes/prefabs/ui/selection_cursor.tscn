@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://u5e3eqkyvlm8"]
+
+[ext_resource type="Texture2D" uid="uid://bis2iuhsks61y" path="res://assets/UI/selection.png" id="1_37ld7"]
+
+[node name="SelectionCursor" type="Sprite2D"]
+z_index = 10
+texture = ExtResource("1_37ld7")
+centered = false

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dxg4hb02by4yf"]
+
+[ext_resource type="TileSet" uid="uid://csfa8cijcug0i" path="res://resources/world_tile_set.tres" id="1_ekgtd"]
+
+[node name="Jobs TileMap" type="TileMap"]
+tile_set = ExtResource("1_ekgtd")
+format = 2
+layer_0/modulate = Color(0.560784, 1, 0.556863, 0.372549)

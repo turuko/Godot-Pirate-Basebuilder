@@ -1,0 +1,19 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixel Piracy Basebuilder", "Pixel Piracy Basebuilder.csproj", "{90690963-6146-48D9-8BAC-FEF62D58C8EF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+	Debug|Any CPU = Debug|Any CPU
+	ExportDebug|Any CPU = ExportDebug|Any CPU
+	ExportRelease|Any CPU = ExportRelease|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90690963-6146-48D9-8BAC-FEF62D58C8EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90690963-6146-48D9-8BAC-FEF62D58C8EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90690963-6146-48D9-8BAC-FEF62D58C8EF}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{90690963-6146-48D9-8BAC-FEF62D58C8EF}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{90690963-6146-48D9-8BAC-FEF62D58C8EF}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{90690963-6146-48D9-8BAC-FEF62D58C8EF}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+	EndGlobalSection
+EndGlobal

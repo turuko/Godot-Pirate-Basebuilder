@@ -1,0 +1,35 @@
+[gd_resource type="Theme" load_steps=9 format=3 uid="uid://d4gsgllllvwom"]
+
+[ext_resource type="Texture2D" uid="uid://yefcyua8qv3o" path="res://assets/UI/kenney/Spritesheet/uipack_rpg_sheet.png" id="1_6gmqm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_noshh"]
+atlas = ExtResource("1_6gmqm")
+region = Rect2(0, 49, 190, 49)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cjje8"]
+texture = SubResource("AtlasTexture_noshh")
+modulate_color = Color(0.407843, 0.407843, 0.407843, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nmfra"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8gqxq"]
+atlas = ExtResource("1_6gmqm")
+region = Rect2(0, 49, 190, 49)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ka6gv"]
+texture = SubResource("AtlasTexture_8gqxq")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u11l7"]
+atlas = ExtResource("1_6gmqm")
+region = Rect2(0, 98, 190, 45)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ru1ui"]
+texture = SubResource("AtlasTexture_u11l7")
+
+[resource]
+Button/font_sizes/font_size = 40
+Button/styles/disabled = SubResource("StyleBoxTexture_cjje8")
+Button/styles/focus = SubResource("StyleBoxEmpty_nmfra")
+Button/styles/hover = SubResource("StyleBoxTexture_ka6gv")
+Button/styles/normal = SubResource("StyleBoxTexture_ka6gv")
+Button/styles/pressed = SubResource("StyleBoxTexture_ru1ui")
