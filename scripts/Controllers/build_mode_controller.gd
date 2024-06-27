@@ -29,16 +29,16 @@ func build(t: Tile) -> void:
 	if _build_mode_is_fixture:
 		var fixture_type = _build_mode_fixture_type
 
-		if GameManager.map_controller.map.is_fixture_placement_valid(fixture_type, t) and t.fixture_job == null:
-			var j = Job.new(t, fixture_type, (func(the_job: Job): 
-				GameManager.map_controller.map.place_fixture(fixture_type, the_job._tile)
-				the_job._tile.fixture_job = null
-				))
+		if GameManager.instance.map_controller.map.is_fixture_placement_valid(fixture_type, t) and t.fixture_job == null:
+			var j = ConstructionJob.new(t, fixture_type, JobCallbacks.build)
 
-			j.job_cancel.connect(func(the_job): the_job._tile.fixture_job = null)
+			j.job_cancel.connect(JobCallbacks.build_cancel.bind([]))
+			j.job_started.connect(JobCallbacks.construction_start.bind([]))
 			t.fixture_job = j
 		
-			GameManager.map_controller.map.job_queue.enqueue(j)
-			print("job queue size: " + str(GameManager.map_controller.map.job_queue.size()))
+			GameManager.instance.map_controller.map.job_queue.enqueue(j)
+			print("job queue size: " + str(GameManager.instance.map_controller.map.job_queue.size()))
 	else:
 		t._type = _build_mode_tile_type
+
+

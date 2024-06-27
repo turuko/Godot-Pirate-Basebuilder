@@ -1,38 +1,54 @@
 class_name Queue extends RefCounted
 
 var count: int
-var queue: Array = [] #TODO: implement a data structure that is able to accomodate different types of jobs, priorities, etc.
+var values: Array = [] #TODO: implement a data structure that is able to accomodate different types of jobs, priorities, etc.
 
 
 func enqueue(data) -> void:
-	queue.push_back(data)
-	count = queue.size()
+
+	values.push_back(data)
+	count = values.size()
 
 
 func dequeue():
-	if queue.size() > 0:
+	if values.size() > 0:
 		count -= 1
-		return queue.pop_front()
+		return values.pop_front()
 	else:
 		return null
 
 
 func peek_at(idx: int):
-	if idx < 0 or idx >= queue.size():
+	if idx < 0 or idx >= values.size():
 		return null
-	return queue[idx]
+	return values[idx]
 
 
 func reverse() -> Queue:
 	var reverse_queue := Queue.new()
-	while queue.size() > 0:
-		reverse_queue.enqueue(queue.pop_back())
+	while values.size() > 0:
+		reverse_queue.enqueue(values.pop_back())
 	return reverse_queue
 
 
 func is_empty() -> bool:
-	return queue.size() == 0
+	return values.size() == 0
 
 
 func size() -> int:
-	return queue.size()
+	return values.size()
+
+
+func save():
+	var save_dict = {
+		"count": count,
+	}
+
+	var saved_values = []
+
+	for v in values:
+		saved_values.push_back(v.save())
+	
+	save_dict["values"] = saved_values
+
+	return save_dict

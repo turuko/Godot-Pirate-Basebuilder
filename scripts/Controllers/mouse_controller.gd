@@ -12,12 +12,20 @@ var curr_viewport_frame_pos: Vector2
 var _drag_start_position: Vector2
 var _drag_preview_nodes = []
 
+func _ready():
+	SimplePool.reset()
+
+
 func _unhandled_input(_event):
+
 	_update_dragging()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	
+	if not GameManager.instance.is_node_ready():
+		return
+
 	curr_viewport_frame_pos = get_viewport().get_mouse_position()
 	curr_frame_pos = get_global_mouse_position()
 	
@@ -25,7 +33,7 @@ func _process(_delta):
 
 	last_frame_viewport_position = curr_viewport_frame_pos
 	last_frame_position = curr_frame_pos
-	last_frame_tile_position = GameManager.world_tile_map.local_to_map(get_global_mouse_position())
+	last_frame_tile_position = GameManager.instance.world_tile_map.local_to_map(get_global_mouse_position())
 
 
 func _update_dragging():
@@ -57,10 +65,10 @@ func _update_dragging():
 	if Input.is_action_pressed("left_mouse"):
 		for x in range(start_x, end_x+1):
 			for y in range(start_y, end_y+1):
-				if x < 0 or x >= GameManager.map_controller.map._width or  y < 0 or y >= GameManager.map_controller.map._height:
+				if x < 0 or x >= GameManager.instance.map_controller.map._width or  y < 0 or y >= GameManager.instance.map_controller.map._height:
 					continue
 				
-				var t = GameManager.map_controller.map.get_tile_at(x,y)
+				var t = GameManager.instance.map_controller.map.get_tile_at(x,y)
 				if t != null:
 					var node = SimplePool.spawn(cursor_prefab, Vector2(x,y) * GameManager.UNIT_SIZE, 0)
 					if node.get_parent() == null:
@@ -72,12 +80,12 @@ func _update_dragging():
 	if Input.is_action_just_released("left_mouse"):
 		for x in range(start_x, end_x+1):
 			for y in range(start_y, end_y+1):
-				if x < 0 or x >= GameManager.map_controller.map._width or  y < 0 or y >= GameManager.map_controller.map._height:
+				if x < 0 or x >= GameManager.instance.map_controller.map._width or  y < 0 or y >= GameManager.instance.map_controller.map._height:
 					continue
 
-				var t = GameManager.map_controller.map.get_tile_at(x,y)
+				var t = GameManager.instance.map_controller.map.get_tile_at(x,y)
 				if t != null:
-					GameManager.bmc.build(t)
+					GameManager.instance.bmc.build(t)
 
 
 func _update_camera_movement():

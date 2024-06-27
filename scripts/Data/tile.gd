@@ -51,6 +51,7 @@ func _set_type(new_type: TileType):
 
 func place_fixture(f_instance: Fixture):
 	if f_instance == null:
+		_map.fixtures.erase(_fixture)
 		_fixture = null
 		return true
 
@@ -99,4 +100,12 @@ func get_neighbours(diags: bool) -> Array[Tile]:
 
 	return ns
 
-	
+
+func save():
+	var save_dict = {
+		"x": _position.x,
+		"y": _position.y,
+		"type": _type
+	}
+
+	return save_dict

@@ -14,6 +14,7 @@ const TERRAIN_ATLAS_COORDS = {
 }
 
 const FIXTURE_ATLAS_COORDS = {
+	"Construction_Placeholder": Vector2i(0,14),
 	"Wall_": Vector2i(0,0),
 	"Wall_E_S_": Vector2i(0,1),
 	"Wall_E_W_": Vector2i(1,1),
@@ -80,19 +81,31 @@ func initialize(m: IslandMap) -> void:
 			var t: Tile = map.get_tile_at(x,y)
 			_on_tile_type_changed(t)
 
+	for j in map.job_queue.queue.values:
+		_on_job_created(j)
+
+	for c in map.characters:
+		if c._job == null:
+			continue
+		_on_job_created(c._job)
+
+	for f in map.fixtures:
+		_on_fixture_created(f)
+
+
 func _on_tile_type_changed(t: Tile) -> void:
-	GameManager.world_tile_map.set_cell(0, Vector2(t._position.x, t._position.y), 0, TERRAIN_ATLAS_COORDS[t._type])
+	GameManager.instance.world_tile_map.set_cell(0, Vector2(t._position.x, t._position.y), 0, TERRAIN_ATLAS_COORDS[t._type])
 
 func _on_tile_changed(_t: Tile) -> void:
 	pass
 
 
 func _on_fixture_created(f: Fixture) -> void:
-	GameManager.world_tile_map.set_cell(0, Vector2(f.tile._position.x, f.tile._position.y), 1, _get_atlas_coords_for_fixture(f))
+	GameManager.instance.world_tile_map.set_cell(0, Vector2(f.tile._position.x, f.tile._position.y), 1, _get_atlas_coords_for_fixture(f))
 
 
 func _on_fixture_changed(f: Fixture) -> void:
-	GameManager.world_tile_map.set_cell(0, Vector2i(f.tile._position.x, f.tile._position.y), 1, _get_atlas_coords_for_fixture(f))
+	GameManager.instance.world_tile_map.set_cell(0, Vector2i(f.tile._position.x, f.tile._position.y), 1, _get_atlas_coords_for_fixture(f))
 
 
 func _get_atlas_coords_for_fixture(f: Fixture, tile: Tile = null) -> Vector2i:
@@ -106,51 +119,51 @@ func _get_atlas_coords_for_fixture(f: Fixture, tile: Tile = null) -> Vector2i:
 	var t2: Tile
 
 	t = map.get_tile_at(f.tile._position.x if tile == null else tile._position.x, f.tile._position.y - 1 if tile == null else tile._position.y - 1)
-	if t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._job_object_type == f._fixture_type):
+	if t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._fixture_type == f._fixture_type):
 		sprite_name += "N_"
 
 	t = map.get_tile_at(f.tile._position.x + 1 if tile == null else tile._position.x + 1, f.tile._position.y - 1 if tile == null else tile._position.y - 1)
 	t1 = map.get_tile_at(f.tile._position.x if tile == null else tile._position.x, f.tile._position.y - 1 if tile == null else tile._position.y - 1)
 	t2 = map.get_tile_at(f.tile._position.x + 1 if tile == null else tile._position.x + 1, f.tile._position.y if tile == null else tile._position.y)
-	if ((t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._job_object_type == f._fixture_type)) and 
-	(t1 != null and (t1._fixture != null and t1._fixture._fixture_type == f._fixture_type) or (t1.fixture_job != null and t1.fixture_job._job_object_type == f._fixture_type)) and 
-	(t2 != null and (t2._fixture != null and t2._fixture._fixture_type == f._fixture_type) or (t2.fixture_job != null and t2.fixture_job._job_object_type == f._fixture_type))):
+	if ((t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._fixture_type == f._fixture_type)) and 
+	(t1 != null and (t1._fixture != null and t1._fixture._fixture_type == f._fixture_type) or (t1.fixture_job != null and t1.fixture_job._fixture_type == f._fixture_type)) and 
+	(t2 != null and (t2._fixture != null and t2._fixture._fixture_type == f._fixture_type) or (t2.fixture_job != null and t2.fixture_job._fixture_type == f._fixture_type))):
 		sprite_name += "NE_"
 
 	t = map.get_tile_at(f.tile._position.x + 1 if tile == null else tile._position.x + 1, f.tile._position.y if tile == null else tile._position.y)
-	if t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._job_object_type == f._fixture_type):
+	if t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._fixture_type == f._fixture_type):
 		sprite_name += "E_"
 
 	t = map.get_tile_at(f.tile._position.x + 1 if tile == null else tile._position.x + 1, f.tile._position.y + 1 if tile == null else tile._position.y + 1)
 	t1 = map.get_tile_at(f.tile._position.x if tile == null else tile._position.x, f.tile._position.y + 1 if tile == null else tile._position.y + 1)
 	t2 = map.get_tile_at(f.tile._position.x + 1 if tile == null else tile._position.x + 1, f.tile._position.y if tile == null else tile._position.y)
-	if ((t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._job_object_type == f._fixture_type)) and 
-	(t1 != null and (t1._fixture != null and t1._fixture._fixture_type == f._fixture_type) or (t1.fixture_job != null and t1.fixture_job._job_object_type == f._fixture_type)) and 
-	(t2 != null and (t2._fixture != null and t2._fixture._fixture_type == f._fixture_type) or (t2.fixture_job != null and t2.fixture_job._job_object_type == f._fixture_type))):
+	if ((t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._fixture_type == f._fixture_type)) and 
+	(t1 != null and (t1._fixture != null and t1._fixture._fixture_type == f._fixture_type) or (t1.fixture_job != null and t1.fixture_job._fixture_type == f._fixture_type)) and 
+	(t2 != null and (t2._fixture != null and t2._fixture._fixture_type == f._fixture_type) or (t2.fixture_job != null and t2.fixture_job._fixture_type == f._fixture_type))):
 		sprite_name += "SE_"
 
 	t = map.get_tile_at(f.tile._position.x if tile == null else tile._position.x, f.tile._position.y + 1 if tile == null else tile._position.y + 1)
-	if t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._job_object_type == f._fixture_type):
+	if t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._fixture_type == f._fixture_type):
 		sprite_name += "S_"
 
 	t = map.get_tile_at(f.tile._position.x - 1 if tile == null else tile._position.x - 1, f.tile._position.y + 1 if tile == null else tile._position.y + 1)
 	t1 = map.get_tile_at(f.tile._position.x if tile == null else tile._position.x, f.tile._position.y + 1 if tile == null else tile._position.y + 1)
 	t2 = map.get_tile_at(f.tile._position.x - 1 if tile == null else tile._position.x - 1, f.tile._position.y if tile == null else tile._position.y)
-	if ((t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._job_object_type == f._fixture_type)) and 
-	(t1 != null and (t1._fixture != null and t1._fixture._fixture_type == f._fixture_type) or (t1.fixture_job != null and t1.fixture_job._job_object_type == f._fixture_type)) and 
-	(t2 != null and (t2._fixture != null and t2._fixture._fixture_type == f._fixture_type) or (t2.fixture_job != null and t2.fixture_job._job_object_type == f._fixture_type))):
+	if ((t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._fixture_type == f._fixture_type)) and 
+	(t1 != null and (t1._fixture != null and t1._fixture._fixture_type == f._fixture_type) or (t1.fixture_job != null and t1.fixture_job._fixture_type == f._fixture_type)) and 
+	(t2 != null and (t2._fixture != null and t2._fixture._fixture_type == f._fixture_type) or (t2.fixture_job != null and t2.fixture_job._fixture_type == f._fixture_type))):
 		sprite_name += "SW_"
 
 	t = map.get_tile_at(f.tile._position.x - 1 if tile == null else tile._position.x - 1, f.tile._position.y if tile == null else tile._position.y)
-	if t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._job_object_type == f._fixture_type):
+	if t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._fixture_type == f._fixture_type):
 		sprite_name += "W_"
 
 	t = map.get_tile_at(f.tile._position.x - 1 if tile == null else tile._position.x - 1, f.tile._position.y - 1 if tile == null else tile._position.y - 1)
 	t1 = map.get_tile_at(f.tile._position.x if tile == null else tile._position.x, f.tile._position.y - 1 if tile == null else tile._position.y - 1)
 	t2 = map.get_tile_at(f.tile._position.x - 1 if tile == null else tile._position.x - 1, f.tile._position.y if tile == null else tile._position.y)
-	if ((t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._job_object_type == f._fixture_type)) and 
-	(t1 != null and (t1._fixture != null and t1._fixture._fixture_type == f._fixture_type) or (t1.fixture_job != null and t1.fixture_job._job_object_type == f._fixture_type)) and 
-	(t2 != null and (t2._fixture != null and t2._fixture._fixture_type == f._fixture_type) or (t2.fixture_job != null and t2.fixture_job._job_object_type == f._fixture_type))):
+	if ((t != null and (t._fixture != null and t._fixture._fixture_type == f._fixture_type) or (t.fixture_job != null and t.fixture_job._fixture_type == f._fixture_type)) and 
+	(t1 != null and (t1._fixture != null and t1._fixture._fixture_type == f._fixture_type) or (t1.fixture_job != null and t1.fixture_job._fixture_type == f._fixture_type)) and 
+	(t2 != null and (t2._fixture != null and t2._fixture._fixture_type == f._fixture_type) or (t2.fixture_job != null and t2.fixture_job._fixture_type == f._fixture_type))):
 		sprite_name += "NW_"
 
 	return FIXTURE_ATLAS_COORDS[sprite_name]
@@ -159,84 +172,87 @@ func _get_atlas_coords_for_fixture(f: Fixture, tile: Tile = null) -> Vector2i:
 func _on_job_created(j: Job) -> void:
 	#TODO: Implement more than fixture jobs
 
-	var atlas_coord = _get_atlas_coords_for_fixture(GameManager.map_controller.map._fixture_prototypes[j._job_object_type], j._tile)
-	GameManager.job_tile_map.set_cell(0, j._tile._position, 1, atlas_coord)
+	if j is ConstructionJob:
+		var cj = j as ConstructionJob
 
-	var neighbour: Tile
-	neighbour = j._tile._map.get_tile_at(j._tile._position.x, j._tile._position.y - 1)
-	if neighbour != null:
-		if neighbour._fixture != null and neighbour._fixture._fixture_type == j._job_object_type:
-			neighbour._fixture.on_changed.emit(neighbour._fixture)
-		elif neighbour.fixture_job != null && neighbour.fixture_job._job_object_type == j._job_object_type:
-			atlas_coord = _get_atlas_coords_for_fixture(GameManager.map_controller.map._fixture_prototypes[neighbour.fixture_job._job_object_type], neighbour.fixture_job._tile)
-			GameManager.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
+		var atlas_coord = _get_atlas_coords_for_fixture(GameManager.instance.map_controller.map._fixture_prototypes[cj._fixture_type], cj._tile)
+		GameManager.instance.job_tile_map.set_cell(0, cj._tile._position, 1, atlas_coord)
 
-	neighbour = j._tile._map.get_tile_at(j._tile._position.x + 1, j._tile._position.y - 1)
-	if neighbour != null:
-		if neighbour._fixture != null and neighbour._fixture._fixture_type == j._job_object_type:
-			neighbour._fixture.on_changed.emit(neighbour._fixture)
-		elif neighbour.fixture_job != null && neighbour.fixture_job._job_object_type == j._job_object_type:
-			atlas_coord = _get_atlas_coords_for_fixture(GameManager.map_controller.map._fixture_prototypes[neighbour.fixture_job._job_object_type], neighbour.fixture_job._tile)
-			GameManager.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
+		var neighbour: Tile
+		neighbour = cj._tile._map.get_tile_at(cj._tile._position.x, cj._tile._position.y - 1)
+		if neighbour != null:
+			if neighbour._fixture != null and neighbour._fixture._fixture_type == cj._fixture_type:
+				neighbour._fixture.on_changed.emit(neighbour._fixture)
+			elif neighbour.fixture_job != null && neighbour.fixture_job._fixture_type == cj._fixture_type:
+				atlas_coord = _get_atlas_coords_for_fixture(GameManager.instance.map_controller.map._fixture_prototypes[neighbour.fixture_job._fixture_type], neighbour.fixture_job._tile)
+				GameManager.instance.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
 
-	neighbour = j._tile._map.get_tile_at(j._tile._position.x + 1, j._tile._position.y)
-	if neighbour != null:
-		if neighbour._fixture != null and neighbour._fixture._fixture_type == j._job_object_type:
-			neighbour._fixture.on_changed.emit(neighbour._fixture)
-		elif neighbour.fixture_job != null && neighbour.fixture_job._job_object_type == j._job_object_type:
-			atlas_coord = _get_atlas_coords_for_fixture(GameManager.map_controller.map._fixture_prototypes[neighbour.fixture_job._job_object_type], neighbour.fixture_job._tile)
-			GameManager.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
+		neighbour = cj._tile._map.get_tile_at(cj._tile._position.x + 1, cj._tile._position.y - 1)
+		if neighbour != null:
+			if neighbour._fixture != null and neighbour._fixture._fixture_type == cj._fixture_type:
+				neighbour._fixture.on_changed.emit(neighbour._fixture)
+			elif neighbour.fixture_job != null && neighbour.fixture_job._fixture_type == cj._fixture_type:
+				atlas_coord = _get_atlas_coords_for_fixture(GameManager.instance.map_controller.map._fixture_prototypes[neighbour.fixture_job._fixture_type], neighbour.fixture_job._tile)
+				GameManager.instance.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
 
-	neighbour = j._tile._map.get_tile_at(j._tile._position.x + 1, j._tile._position.y + 1)
-	if neighbour != null:
-		if neighbour._fixture != null and neighbour._fixture._fixture_type == j._job_object_type:
-			neighbour._fixture.on_changed.emit(neighbour._fixture)
-		elif neighbour.fixture_job != null && neighbour.fixture_job._job_object_type == j._job_object_type:
-			atlas_coord = _get_atlas_coords_for_fixture(GameManager.map_controller.map._fixture_prototypes[neighbour.fixture_job._job_object_type], neighbour.fixture_job._tile)
-			GameManager.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
+		neighbour = cj._tile._map.get_tile_at(cj._tile._position.x + 1, cj._tile._position.y)
+		if neighbour != null:
+			if neighbour._fixture != null and neighbour._fixture._fixture_type == cj._fixture_type:
+				neighbour._fixture.on_changed.emit(neighbour._fixture)
+			elif neighbour.fixture_job != null && neighbour.fixture_job._fixture_type == cj._fixture_type:
+				atlas_coord = _get_atlas_coords_for_fixture(GameManager.instance.map_controller.map._fixture_prototypes[neighbour.fixture_job._fixture_type], neighbour.fixture_job._tile)
+				GameManager.instance.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
 
-	neighbour = j._tile._map.get_tile_at(j._tile._position.x, j._tile._position.y + 1)
-	if neighbour != null:
-		if neighbour._fixture != null and neighbour._fixture._fixture_type == j._job_object_type:
-			neighbour._fixture.on_changed.emit(neighbour._fixture)
-		elif neighbour.fixture_job != null && neighbour.fixture_job._job_object_type == j._job_object_type:
-			atlas_coord = _get_atlas_coords_for_fixture(GameManager.map_controller.map._fixture_prototypes[neighbour.fixture_job._job_object_type], neighbour.fixture_job._tile)
-			GameManager.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
+		neighbour = cj._tile._map.get_tile_at(cj._tile._position.x + 1, cj._tile._position.y + 1)
+		if neighbour != null:
+			if neighbour._fixture != null and neighbour._fixture._fixture_type == cj._fixture_type:
+				neighbour._fixture.on_changed.emit(neighbour._fixture)
+			elif neighbour.fixture_job != null && neighbour.fixture_job._fixture_type == cj._fixture_type:
+				atlas_coord = _get_atlas_coords_for_fixture(GameManager.instance.map_controller.map._fixture_prototypes[neighbour.fixture_job._fixture_type], neighbour.fixture_job._tile)
+				GameManager.instance.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
 
-	neighbour = j._tile._map.get_tile_at(j._tile._position.x - 1, j._tile._position.y + 1)
-	if neighbour != null:
-		if neighbour._fixture != null and neighbour._fixture._fixture_type == j._job_object_type:
-			neighbour._fixture.on_changed.emit(neighbour._fixture)
-		elif neighbour.fixture_job != null && neighbour.fixture_job._job_object_type == j._job_object_type:
-			atlas_coord = _get_atlas_coords_for_fixture(GameManager.map_controller.map._fixture_prototypes[neighbour.fixture_job._job_object_type], neighbour.fixture_job._tile)
-			GameManager.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
+		neighbour = cj._tile._map.get_tile_at(cj._tile._position.x, cj._tile._position.y + 1)
+		if neighbour != null:
+			if neighbour._fixture != null and neighbour._fixture._fixture_type == cj._fixture_type:
+				neighbour._fixture.on_changed.emit(neighbour._fixture)
+			elif neighbour.fixture_job != null && neighbour.fixture_job._fixture_type == cj._fixture_type:
+				atlas_coord = _get_atlas_coords_for_fixture(GameManager.instance.map_controller.map._fixture_prototypes[neighbour.fixture_job._fixture_type], neighbour.fixture_job._tile)
+				GameManager.instance.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
 
-	neighbour = j._tile._map.get_tile_at(j._tile._position.x - 1, j._tile._position.y)
-	if neighbour != null:
-		if neighbour._fixture != null and neighbour._fixture._fixture_type == j._job_object_type:
-			neighbour._fixture.on_changed.emit(neighbour._fixture)
-		elif neighbour.fixture_job != null && neighbour.fixture_job._job_object_type == j._job_object_type:
-			atlas_coord = _get_atlas_coords_for_fixture(GameManager.map_controller.map._fixture_prototypes[neighbour.fixture_job._job_object_type], neighbour.fixture_job._tile)
-			GameManager.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
+		neighbour = cj._tile._map.get_tile_at(cj._tile._position.x - 1, cj._tile._position.y + 1)
+		if neighbour != null:
+			if neighbour._fixture != null and neighbour._fixture._fixture_type == cj._fixture_type:
+				neighbour._fixture.on_changed.emit(neighbour._fixture)
+			elif neighbour.fixture_job != null && neighbour.fixture_job._fixture_type == cj._fixture_type:
+				atlas_coord = _get_atlas_coords_for_fixture(GameManager.instance.map_controller.map._fixture_prototypes[neighbour.fixture_job._fixture_type], neighbour.fixture_job._tile)
+				GameManager.instance.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
 
-	neighbour = j._tile._map.get_tile_at(j._tile._position.x - 1, j._tile._position.y - 1)
-	if neighbour != null:
-		if neighbour._fixture != null and neighbour._fixture._fixture_type == j._job_object_type:
-			neighbour._fixture.on_changed.emit(neighbour._fixture)
-		elif neighbour.fixture_job != null && neighbour.fixture_job._job_object_type == j._job_object_type:
-			atlas_coord = _get_atlas_coords_for_fixture(GameManager.map_controller.map._fixture_prototypes[neighbour.fixture_job._job_object_type], neighbour.fixture_job._tile)
-			GameManager.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
+		neighbour = cj._tile._map.get_tile_at(cj._tile._position.x - 1, cj._tile._position.y)
+		if neighbour != null:
+			if neighbour._fixture != null and neighbour._fixture._fixture_type == cj._fixture_type:
+				neighbour._fixture.on_changed.emit(neighbour._fixture)
+			elif neighbour.fixture_job != null && neighbour.fixture_job._fixture_type == cj._fixture_type:
+				atlas_coord = _get_atlas_coords_for_fixture(GameManager.instance.map_controller.map._fixture_prototypes[neighbour.fixture_job._fixture_type], neighbour.fixture_job._tile)
+				GameManager.instance.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
+
+		neighbour = cj._tile._map.get_tile_at(cj._tile._position.x - 1, cj._tile._position.y - 1)
+		if neighbour != null:
+			if neighbour._fixture != null and neighbour._fixture._fixture_type == cj._fixture_type:
+				neighbour._fixture.on_changed.emit(neighbour._fixture)
+			elif neighbour.fixture_job != null && neighbour.fixture_job._fixture_type == cj._fixture_type:
+				atlas_coord = _get_atlas_coords_for_fixture(GameManager.instance.map_controller.map._fixture_prototypes[neighbour.fixture_job._fixture_type], neighbour.fixture_job._tile)
+				GameManager.instance.job_tile_map.set_cell(0, neighbour.fixture_job._tile._position, 1, atlas_coord)
 
 
-	if not j.job_complete.is_connected(_on_job_ended):
-		j.job_complete.connect(_on_job_ended)
-	if not j.job_cancel.is_connected(_on_job_ended):
-		j.job_cancel.connect(_on_job_ended)
+		if not cj.job_complete.is_connected(_on_job_ended):
+			cj.job_complete.connect(_on_job_ended)
+		if not cj.job_cancel.is_connected(_on_job_ended):
+			cj.job_cancel.connect(_on_job_ended)
 
 
 
 func _on_job_ended(j: Job) -> void:
 	#TODO: implement more than fixture jobs
-	GameManager.job_tile_map.set_cell(0, j._tile._position)
+	GameManager.instance.job_tile_map.set_cell(0, j._tile._position)
 
 	

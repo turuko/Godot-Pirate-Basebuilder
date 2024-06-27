@@ -27,7 +27,7 @@ var speed: float = 5 #Tiles per second
 var name: String
 
 var _job: Job
-
+var _can_work: bool = true
 
 func _init(t: Tile, n: String):
 	curr_tile = t
@@ -49,9 +49,16 @@ func update_handle_job(delta: float):
 
 			_job.job_complete.connect(_on_job_ended)
 			_job.job_cancel.connect(_on_job_ended)
+			_job.job_started.connect(_on_job_started)
 
 	if curr_tile == dest_tile:
 		if _job != null:
+			if not _can_work:
+				#check if anything has changed
+
+				if not curr_tile._map.characters.any(func(c): return c.curr_tile == _job._tile):
+					_can_work = true
+				return
 			_job.work_job(delta)
 
 
@@ -157,3 +164,79 @@ func _on_job_ended(j: Job) -> void:
 		printerr("Character being told about job that is not his")
 	
 	_job = null
+
+
+func _on_job_started(j: Job) -> void:
+	for c in curr_tile._map.characters:
+		if c.curr_tile == j._tile:
+			_can_work = false
+
+
+func save():
+
+	var save_dict = {
+		"curr_tile_x": curr_tile._position.x,
+		"curr_tile_y": curr_tile._position.y,
+		
+		"dest_tile_x": dest_tile._position.x,
+		"dest_tile_y": dest_tile._position.y,
+
+		"next_tile_x": next_tile._position.x,
+		"next_tile_y": next_tile._position.y,
+	
+		"movement_percentage": movement_percentage,
+		"speed": speed,
+		"name": name
+	}
+
+	if not _job == null:
+		save_dict["job"] = _job.save()
+
+	if not path_astar == null:
+		var path_data = {
+			"count": path_astar.count,
+		}
+
+		var path_values = []
+		for t in path_astar.values:
+			var tile = t as Tile
+			var tile_data = {
+				"x": tile._position.x,
+				"y": tile._position.y,
+			}
+			path_values.push_back(tile_data)
+		
+		path_data["values"] = path_values
+
+		save_dict["path_astar"] = path_data
+
+	return save_dict
+
+
+static func load(map: IslandMap, data: Dictionary) -> Character:
+	var character_name = data["name"]
+	var c_tile = map.get_tile_at(data["curr_tile_x"], data["curr_tile_y"])
+	var character = Character.new(c_tile, character_name)
+	character.dest_tile = map.get_tile_at(data["dest_tile_x"], data["dest_tile_y"])
+	character.next_tile = map.get_tile_at(data["next_tile_x"], data["next_tile_y"])
+	
+	if data.has("path_astar"):
+		character.path_astar = Queue.new()
+		character.path_astar.count = data["path_astar"]["count"]
+		for td in data["path_astar"]["values"]:
+			var tile = map.get_tile_at(td["x"], td["y"])
+			character.path_astar.enqueue(tile)
+	
+	character.movement_percentage = data["movement_percentage"]
+	character.speed = data["speed"]
+
+	if data.has("job"):
+		var job 
+		match (data["job"]["job_type"] as Job.JobType):
+			Job.JobType.CONSTRUCTION: job = ConstructionJob.load(map, data["job"])
+			Job.JobType.MISC: job = Job.load(map, data["job"])
+		character._job = job
+		character._job.job_complete.connect(character._on_job_ended)
+		character._job.job_cancel.connect(character._on_job_ended)
+
+	return character

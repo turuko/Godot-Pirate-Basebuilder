@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://ba7xucig58at0"]
+[gd_scene load_steps=12 format=3 uid="uid://ba7xucig58at0"]
 
 [ext_resource type="Script" path="res://scripts/Controllers/camera_controller.gd" id="1_iyv6l"]
 [ext_resource type="Script" path="res://scripts/Controllers/tile_map_controller.gd" id="2_2fxs4"]
@@ -9,6 +9,8 @@
 [ext_resource type="Theme" uid="uid://d4gsgllllvwom" path="res://themes/gui_theme.tres" id="6_o22uo"]
 [ext_resource type="Script" path="res://scripts/Controllers/character_sprite_controller.gd" id="7_bnk0p"]
 [ext_resource type="Script" path="res://scripts/UI/ui_button.gd" id="7_jhcs2"]
+[ext_resource type="Script" path="res://scripts/Controllers/game_manager.gd" id="8_77jk5"]
+[ext_resource type="Script" path="res://scripts/Controllers/save_load_controller.gd" id="9_g6kp6"]
 
 [node name="Game" type="Node2D"]
 
@@ -40,6 +42,12 @@ script = ExtResource("6_bb1x6")
 
 [node name="CharacterSpriteController" type="Node" parent="Controllers"]
 script = ExtResource("7_bnk0p")
+
+[node name="GameManager" type="Node" parent="Controllers"]
+script = ExtResource("8_77jk5")
+
+[node name="SaveLoadController" type="Node" parent="Controllers"]
+script = ExtResource("9_g6kp6")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -80,3 +88,34 @@ text = "Remove Land
 "
 script = ExtResource("7_jhcs2")
 signal_name = "remove_button_pressed"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="New World" type="Button" parent="CanvasLayer/HBoxContainer"]
+custom_minimum_size = Vector2(170, 40)
+layout_mode = 2
+theme = ExtResource("6_o22uo")
+theme_override_font_sizes/font_size = 24
+text = "New World"
+script = ExtResource("7_jhcs2")
+signal_name = "new_world_button_pressed"
+
+[node name="Load" type="Button" parent="CanvasLayer/HBoxContainer"]
+custom_minimum_size = Vector2(170, 40)
+layout_mode = 2
+theme = ExtResource("6_o22uo")
+theme_override_font_sizes/font_size = 24
+text = "Load"
+script = ExtResource("7_jhcs2")
+signal_name = "load_button_pressed"
+
+[node name="Save" type="Button" parent="CanvasLayer/HBoxContainer"]
+custom_minimum_size = Vector2(170, 40)
+layout_mode = 2
+theme = ExtResource("6_o22uo")
+theme_override_font_sizes/font_size = 24
+text = "Save"
+script = ExtResource("7_jhcs2")
+signal_name = "save_button_pressed"

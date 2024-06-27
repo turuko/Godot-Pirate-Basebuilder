@@ -18,7 +18,6 @@ config/icon="res://assets/sprites/characters/character.png"
 
 [autoload]
 
-GameManager="*res://scenes/game_manager.tscn"
 DebugMenu="*res://addons/debug_menu/debug_menu.tscn"
 EventBus="*res://scripts/Controllers/event_bus.gd"
 
