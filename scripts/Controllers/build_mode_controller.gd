@@ -8,7 +8,7 @@ var _build_mode_fixture_type: String
 func _ready():
 	EventBus.sand_button_pressed.connect(set_build_mode_sand)
 	EventBus.remove_button_pressed.connect(set_build_mode_water)
-	EventBus.wall_button_pressed.connect(set_build_mode_fixture)
+	EventBus.fixture_button_pressed.connect(set_build_mode_fixture)
 
 
 func set_build_mode_sand(_args):
@@ -30,10 +30,10 @@ func build(t: Tile) -> void:
 		var fixture_type = _build_mode_fixture_type
 
 		if GameManager.instance.map_controller.map.is_fixture_placement_valid(fixture_type, t) and t.fixture_job == null:
-			var j = ConstructionJob.new(t, fixture_type, JobCallbacks.build)
+			var j = ConstructionJob.new(t, fixture_type, JobActions.build)
 
-			j.job_cancel.connect(JobCallbacks.build_cancel.bind([]))
-			j.job_started.connect(JobCallbacks.construction_start.bind([]))
+			j.job_cancel.connect(JobActions.build_cancel.bind([]))
+			j.job_started.connect(JobActions.construction_start.bind([]))
 			t.fixture_job = j
 		
 			GameManager.instance.map_controller.map.job_queue.enqueue(j)

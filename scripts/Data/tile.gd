@@ -14,6 +14,13 @@ enum TileType
 	DARK_ROCK
 }
 
+enum Enterability
+{
+	YES,
+	NEVER,
+	SOON,
+}
+
 var _position: Vector2i
 var _type: TileType : set = _set_type
 
@@ -47,6 +54,16 @@ func _set_type(new_type: TileType):
 
 	if _type != old_type:
 		tile_type_changed.emit(self)
+
+
+func is_enterable() -> Enterability:
+	if movement_cost == 0:
+		return Enterability.NEVER
+	
+	if _fixture != null and _fixture.is_enterable != null:
+		return _fixture.is_enterable.call(_fixture);
+
+	return Enterability.YES
 
 
 func place_fixture(f_instance: Fixture):

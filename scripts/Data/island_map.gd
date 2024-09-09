@@ -65,6 +65,9 @@ func update(delta: float) -> void:
 	for c in characters:
 		c.update(delta)
 
+	for f in fixtures:
+		f.update(delta)
+
 
 func create_character(t: Tile) -> Character:
 	var c = Character.new(t, "Tester1")
@@ -93,6 +96,20 @@ func _create_fixture_prototypes():
 		1,
 		false
 	)
+
+	_fixture_prototypes["Door"] = Fixture.create_prototype(
+		"Door",
+		200,
+		1.1,
+		1,
+		1,
+		false
+	)
+
+	_fixture_prototypes["Door"].fixture_parameters["open"] = 0
+	_fixture_prototypes["Door"].fixture_parameters["is_opening"] = 0
+	_fixture_prototypes["Door"].update_actions.connect(FixtureActions.door_update_action)
+	_fixture_prototypes["Door"].is_enterable = Callable(FixtureActions, "door_is_enterable")
 
 
 func _to_tile_type(elevation: float, moisture: float) -> Tile.TileType:
@@ -152,7 +169,10 @@ func place_fixture(fixture_type: String, t: Tile) -> Fixture:
 
 	if t.movement_cost == 0:
 		pathfinder.disable_tile(t)
-	
+	else:
+		pathfinder.enable_tile(t)
+		pathfinder.set_tile_weight(t)
+
 	return f
 
 

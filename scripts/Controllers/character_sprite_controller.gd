@@ -15,8 +15,6 @@ func initialize():
 
 	map.on_character_created.connect(_on_character_created)
 
-	map.create_character(map.get_tile_at(map._width / 2, map._height / 2))
-
 func _load_sprites() -> void:
 	var path = "res://assets/sprites/characters"
 	var dir = DirAccess.open(path)

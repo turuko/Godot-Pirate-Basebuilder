@@ -134,6 +134,15 @@ func update_handle_movement(delta: float):
 		pow(curr_tile._position.x - next_tile._position.x, 2) + 
 		pow(curr_tile._position.y - next_tile._position.y, 2))
 
+	if next_tile.is_enterable() == Tile.Enterability.NEVER:
+		printerr("Character tried to enter unwalkable tile")
+		next_tile = null
+		path_astar = null
+		return
+	elif next_tile.is_enterable() == Tile.Enterability.SOON:
+		print("can soon enter tile")
+		return
+
 	var dist_this_frame = speed * delta
 
 	var perc_this_frame = dist_this_frame / dist_total

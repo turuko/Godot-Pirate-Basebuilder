@@ -67,11 +67,11 @@ static func load(map: IslandMap, data: Dictionary) -> Job:
 
 	match (data["job_type"] as JobType):
 		JobType.CONSTRUCTION:
-			job = ConstructionJob.new(tile, "", Callable(JobCallbacks, complete_name),data["job_time"])
+			job = ConstructionJob.new(tile, "", Callable(JobActions, complete_name),data["job_time"])
 		JobType.MISC:
-			job = Job.new(tile,data["job_type"], Callable(JobCallbacks, complete_name),data["job_time"])
-	job.job_cancel.connect(Callable(JobCallbacks, cancel_name).bind([]))
-	job.job_started.connect(Callable(JobCallbacks, start_name).bind([]))
+			job = Job.new(tile,data["job_type"], Callable(JobActions, complete_name),data["job_time"])
+	job.job_cancel.connect(Callable(JobActions, cancel_name).bind([]))
+	job.job_started.connect(Callable(JobActions, start_name).bind([]))
 	tile.fixture_job = job
 
 	return job

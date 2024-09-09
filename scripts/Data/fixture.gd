@@ -2,6 +2,7 @@ class_name Fixture extends RefCounted
 
 signal on_changed(f: Fixture)
 var position_validation_func: Callable
+var is_enterable: Callable
 
 var tile: Tile
 var _fixture_type: String
@@ -17,8 +18,29 @@ var _health: float = 0
 
 var _links_to_neighbour: bool
 
+var fixture_parameters: Dictionary #string, Variant
+signal update_actions(f: Fixture, delta_time: float)
 
-static func create_prototype(type: String, max_health:float, move_cost: int = 1, w: int = 1, h: int = 1, ltn: bool = false) -> Fixture:
+
+func clone() -> Fixture:
+	var f = Fixture.new()
+	f._fixture_type = self._fixture_type
+	f._movement_multiplier = self._movement_multiplier
+	f._width = self._width
+	f._height = self._height
+	f._max_health = self._max_health
+	f._links_to_neighbour = self._links_to_neighbour
+	f.position_validation_func = Callable(self.position_validation_func)
+	f.is_enterable = Callable(self.is_enterable)
+	f.fixture_parameters = self.fixture_parameters.duplicate()
+
+	for con in self.update_actions.get_connections():
+		f.update_actions.connect(con.callable)
+
+	return f
+
+
+static func create_prototype(type: String, max_health:float, move_cost: float = 1, w: int = 1, h: int = 1, ltn: bool = false) -> Fixture:
 	var f = Fixture.new()
 	f._fixture_type = type
 	f._movement_multiplier = move_cost
@@ -36,14 +58,7 @@ static func place_instance(proto: Fixture, t: Tile) -> Fixture:
 		printerr("position validity function returned false")
 		return null
 
-	var f = Fixture.new()
-	f._fixture_type = proto._fixture_type
-	f._movement_multiplier = proto._movement_multiplier
-	f._width = proto._width
-	f._height = proto._height
-	f._max_health = proto._max_health
-	f._links_to_neighbour = proto._links_to_neighbour
-	f.position_validation_func = proto.position_validation_func
+	var f = proto.clone()
 
 	f.tile = t
 
@@ -86,6 +101,10 @@ static func place_instance(proto: Fixture, t: Tile) -> Fixture:
 			neighbour._fixture.on_changed.emit(neighbour._fixture)
 
 	return f
+
+
+func update(delta: float) -> void:
+	update_actions.emit(self, delta)
 
 
 func update_health(value: float):

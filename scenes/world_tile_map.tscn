@@ -5,3 +5,6 @@
 [node name="World TileMap" type="TileMap"]
 tile_set = ExtResource("1_u5y5m")
 format = 2
+layer_0/name = "Terrain"
+layer_1/name = "Fixtures"
+layer_1/tile_data = PackedInt32Array()

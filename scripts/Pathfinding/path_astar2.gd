@@ -1,38 +1,27 @@
 class_name Path_AStar2 extends RefCounted
-
-#var path: Queue #Queue<Tile>
-var a_star: AStar2D
+var a_star: AStarGrid2D
 var nodes = {}
 
 func _init(m: IslandMap):
-	a_star = AStar2D.new()
+	a_star = AStarGrid2D.new()
+	a_star.region = Rect2i(0,0, m._width, m._height)
+	a_star.default_compute_heuristic = AStarGrid2D.HEURISTIC_CHEBYSHEV
+	a_star.default_estimate_heuristic = AStarGrid2D.HEURISTIC_CHEBYSHEV
+	a_star.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
+	a_star.update()
+
 	
 	for x in range(m._width):
 		for y in range(m._height):
-			var id = y + x * m._width
+			var id = Vector2i(x,y)
 			var tile := m.get_tile_at(x,y)
-			a_star.add_point(id, Vector2(x,y))
 
 			nodes[tile] = id
 
 			if tile.movement_cost == 0:
-				a_star.set_point_disabled(nodes[tile])
+				a_star.set_point_solid(nodes[tile])
 			else:
-				a_star.set_point_weight_scale(id, (1.0/tile.movement_cost))
-
-			
-
-	for t in nodes:
-
-		var neighbours = t.get_neighbours(true)
-
-		for n in neighbours:
-			if n != null:
-
-				if is_clipping_corner(t,n):
-					continue
-
-				a_star.connect_points(nodes[t], nodes[n])
+				a_star.set_point_weight_scale(id, tile.movement_cost)
 
 
 func is_clipping_corner(curr: Tile, neigh: Tile) -> bool:
@@ -51,25 +40,19 @@ func is_clipping_corner(curr: Tile, neigh: Tile) -> bool:
 
 
 func get_tile_active(t: Tile) -> bool:
-	return not a_star.is_point_disabled(nodes[t])
+	return not a_star.is_point_solid(nodes[t])
 
 
 func disable_tile(t: Tile):
-	a_star.set_point_disabled(nodes[t])
-
-	for n in t.get_neighbours(true):
-		if n == null:
-			continue
-		for n1 in n.get_neighbours(true):
-			if n1 == null:
-				continue
-			if is_clipping_corner(n, n1):
-				a_star.disconnect_points(nodes[n], nodes[n1])
+	a_star.set_point_solid(nodes[t])
 
 
 func enable_tile(t: Tile):
-	a_star.set_point_disabled(nodes[t], false)
+	a_star.set_point_solid(nodes[t], false)
 
+
+func set_tile_weight(t: Tile):
+	a_star.set_point_weight_scale(nodes[t], t.movement_cost)
 
 func get_path(start_tile: Tile, end_tile: Tile) -> Queue:
 	var path: Queue = Queue.new()

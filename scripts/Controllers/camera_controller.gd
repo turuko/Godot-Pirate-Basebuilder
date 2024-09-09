@@ -10,7 +10,6 @@ var _zoom_dir = 0
 var min_zoom = Vector2(2.5,2.5)
 var max_zoom = Vector2(0.05, 0.05)
 
-
 func _input(event):
 	if event.is_action_pressed("scroll_up"):
 		_zoom_dir = 1

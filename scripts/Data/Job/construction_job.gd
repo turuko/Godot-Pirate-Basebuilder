@@ -30,8 +30,8 @@ static func load(map: IslandMap, data: Dictionary) -> ConstructionJob:
 
 	var c_job := job as ConstructionJob
 	c_job._fixture_type = data["fixture_type"]
-	if c_job.job_complete.is_connected(Callable(JobCallbacks, data["job_complete_name"])):
-		c_job.job_complete.disconnect(Callable(JobCallbacks, data["job_complete_name"]))
-	c_job.job_complete.connect(Callable(JobCallbacks, data["job_complete_name"]).bind([c_job._fixture_type]))
+	if c_job.job_complete.is_connected(Callable(JobActions, data["job_complete_name"])):
+		c_job.job_complete.disconnect(Callable(JobActions, data["job_complete_name"]))
+	c_job.job_complete.connect(Callable(JobActions, data["job_complete_name"]).bind([c_job._fixture_type]))
 	print("c_job: ", c_job)
 	return c_job
