@@ -14,7 +14,8 @@ config/name="Pixel Piracy Basebuilder"
 config/version="0.0.1"
 run/main_scene="res://scenes/game.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
-config/icon="res://assets/sprites/characters/character.png"
+config/icon="res://assets/Icon.png"
+config/windows_native_icon="res://assets/Icon.ico"
 
 [autoload]
 
@@ -26,10 +27,15 @@ EventBus="*res://scripts/Controllers/event_bus.gd"
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/stretch/mode="viewport"
+window/vsync/vsync_mode=0
 
 [dotnet]
 
 project/assembly_name="Pixel Piracy Basebuilder"
+
+[gui]
+
+theme/custom="res://themes/gui_theme.tres"
 
 [input]
 

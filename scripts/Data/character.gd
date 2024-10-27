@@ -1,6 +1,7 @@
 class_name Character extends RefCounted
 
 signal on_changed(c: Character)
+signal created_item(i: Item)
 
 var x: float:
 	get:
@@ -27,6 +28,9 @@ var speed: float = 5 #Tiles per second
 var name: String
 
 var _job: Job
+var closest_job_tile: Tile = null
+var _item: Item = null
+var _carrying_capacity: int = 5
 var _can_work: bool = true
 
 func _init(t: Tile, n: String):
@@ -44,56 +48,217 @@ func update_handle_job(delta: float):
 		_job = curr_tile._map.job_queue.dequeue()
 
 		if _job != null:
-			if not get_path_to_job():
-				return
-
 			_job.job_complete.connect(_on_job_ended)
 			_job.job_cancel.connect(_on_job_ended)
 			_job.job_started.connect(_on_job_started)
 
-	if curr_tile == dest_tile:
-		if _job != null:
-			if not _can_work:
-				#check if anything has changed
+	if _job is ConstructionJob:
+		handle_construction_job(delta)
+	elif _job is HaulJob:
+		handle_haul_job(delta)
 
-				if not curr_tile._map.characters.any(func(c): return c.curr_tile == _job._tile):
-					_can_work = true
+func handle_haul_job(_delta: float):
+	var hj := _job as HaulJob
+	if _item != null and _item._object_type == hj.item_type_to_haul and (_item.stack_size == min(_carrying_capacity, hj._job_time) or not get_path_to_nearest_item(hj.item_type_to_haul, curr_tile == hj._tiles[0], false)):
+		
+		#if get_path_to_nearest_item(hj.item_type_to_haul) == false:
+		#	printerr("No items of the type to haul??")
+		#	abandon_job()
+		#	return
+		
+		if get_path_to_job() == false:
+			return
+		if curr_tile == dest_tile:
+			hj.work_job(_item.stack_size)
+			curr_tile._map.item_manager.place_item(_item, curr_tile)
+			_item = null
+	else:
+		if not get_path_to_nearest_item(hj.item_type_to_haul, curr_tile == hj._tiles[0], false):
+			abandon_job()
+			return
+		
+		curr_tile._map.pathfinder.enable_tile(curr_tile)
+
+		if curr_tile == dest_tile:
+			var amount_to_pickup = min(_carrying_capacity, hj._job_time)
+			if _item != null:
+				amount_to_pickup -= _item.stack_size
+			
+			if amount_to_pickup <= 0:
 				return
-			_job.work_job(delta)
+			
+			var map = curr_tile._map
+			var result = map.item_manager.take_item(curr_tile, amount_to_pickup)
+			if _item != null:
+				if result[0]:
+					if result[1] is int:
+						_item.stack_size += result[1]
+						_item.on_changed.emit(_item)
+					elif result[1] is Item:
+						_item.stack_size += result[1].stack_size
+						_item.on_changed.emit(_item)
+			else:
+				if result[0]:
+					if result[1] is int:
+						_create_item(hj.item_type_to_haul, result[1])
+					elif result[1] is Item:
+						_item = result[1]
+						_item.character = self
 
 
-func get_path_to_job() -> bool:
-	var shortest_length := 10000000
+func handle_construction_job(delta: float):
+	var cj = _job as ConstructionJob
+	if not cj._has_required_items:
+		#get first item requirement
+		var item_type: String = ""
+		for type in cj._required_items.keys():
+			if not cj.has_enough_of_item(type):
+				item_type = type
+				break
+		#Check if character is holding item of correct type
+
+		if _item != null and _item._object_type == item_type and (_item.stack_size == min(_carrying_capacity, cj._required_items[item_type]) or not get_path_to_nearest_item(item_type)):
+			#Get path to job
+			if get_path_to_job(true) == false:
+				return
+			
+			if curr_tile == dest_tile:
+				if _job != null:
+					cj.add_item(_item)
+					print("Item is null: ", _item == null)
+					return
+		else:
+			#Character is not holding item of correct type or can hold more of it, so find and go to nearest item of required type
+			if not get_path_to_nearest_item(item_type):
+				abandon_job()
+				return
+
+			curr_tile._map.pathfinder.enable_tile(curr_tile)
+				
+			if curr_tile == dest_tile:
+				var amount_to_pickup = min(_carrying_capacity, cj._required_items[item_type])
+				if _item != null:
+					amount_to_pickup -= _item.stack_size
+				
+				if amount_to_pickup <= 0:
+					return
+
+				var map = curr_tile._map
+				var result = map.item_manager.take_item(curr_tile, amount_to_pickup)
+				if _item != null:
+					if result[0]:
+						if result[1] is int:
+							_item.stack_size += result[1]
+							_item.on_changed.emit(_item)
+						elif result[1] is Item:
+							_item.stack_size += result[1].stack_size
+							_item.on_changed.emit(_item)
+				else:
+					print("No item at pickup: ", _item == null)
+					if result[0]:
+						print("can pickup")
+						if result[1] is int:
+							_create_item(item_type, result[1])
+						elif result[1] is Item:
+							_item = result[1]
+							_item.character = self
+	else:
+		if get_path_to_job(true) == false:
+				return
+		if curr_tile == dest_tile:
+			if _job != null:
+				if not _can_work:
+					#check if anything has changed
+
+					if not curr_tile._map.characters.any(func(c): return _job._tiles.has(c.curr_tile)):
+						_can_work = true
+					return
+				if not cj._has_required_items:
+					if _item == null:
+						printerr("Should character not have an item of some kind here?!")
+						return
+					cj.add_item(_item)
+					print("Item is null: ", _item == null)
+					return
+
+				cj.work_job(delta)
+
+func _create_item(item_type: String, amount: int):
+	_item = Item.create_instance(curr_tile._map._item_prototypes[item_type], amount)
+	_item.character = self
+	created_item.emit(_item)
+
+
+func get_path_to_nearest_item(item_type: String, exclude_current_tile: bool = false, include_items_in_stockpiles: bool = true) -> bool:
+	var shortest_length = 10000000
 	var dest = null
-	for n in _job._tile.get_neighbours(true):
-		if n == null:
-			continue
-		var path = curr_tile._map.pathfinder.get_path(curr_tile, n)
+	var map = curr_tile._map
+	for i in map.item_manager.all_items[item_type] as Array[Item]:
+		if not include_items_in_stockpiles:
+			if map.item_manager.is_item_in_stockpile(i):
+				continue
+		if exclude_current_tile:
+			if i.tile == curr_tile:
+				continue
+		var path = map.pathfinder.get_path(curr_tile, i.tile)
 		if path.size() == 0:
 			continue
 		if path.size() < shortest_length:
 			shortest_length = path.size()
-			dest = path.peek_at(path.size() - 1)
+			dest = i.tile
+	
+	if dest == null:
+		return false
+	else:
+		dest_tile = dest
+		return true
+
+func get_path_to_job(stop_before_job_tile: bool = false) -> bool:
+	var shortest_length := 10000000
+	var dest = null
+
+	var shortest_length_job = 100000000
+	for t in _job._tiles:
+		var path = curr_tile._map.pathfinder.get_path(curr_tile, t)
+		if path.size() == 0:
+			continue
+		if path.size() < shortest_length_job:
+			shortest_length_job = path.size()
+			closest_job_tile = t
+
+	if stop_before_job_tile == true:
+		for n in closest_job_tile.get_neighbours(true):
+			if n == null:
+				continue
+			var path = curr_tile._map.pathfinder.get_path(curr_tile, n)
+			if path.size() == 0:
+				continue
+			if path.size() < shortest_length:
+				shortest_length = path.size()
+				dest = path.peek_at(path.size() - 1)
+	else:
+		dest = closest_job_tile
 
 	if dest == null:
 		printerr("No path to job")
 		abandon_job()
 		return false
 	else:
-		if _job._tile == curr_tile:
-			#We are standing on the work spot, so need to move before we can work the job
-			if curr_tile._map.pathfinder.get_tile_active(curr_tile._map.get_tile_at(curr_tile._position.x, curr_tile._position.y - 1)):
-				print("moving up")
-				dest_tile = curr_tile._map.get_tile_at(curr_tile._position.x, curr_tile._position.y - 1)
-			elif curr_tile._map.pathfinder.get_tile_active(curr_tile._map.get_tile_at(curr_tile._position.x + 1, curr_tile._position.y)):
-				print("moving right")
-				dest_tile = curr_tile._map.get_tile_at(curr_tile._position.x + 1, curr_tile._position.y)
-			elif curr_tile._map.pathfinder.get_tile_active(curr_tile._map.get_tile_at(curr_tile._position.x, curr_tile._position.y + 1)):
-				print("moving down")
-				dest_tile = curr_tile._map.get_tile_at(curr_tile._position.x, curr_tile._position.y + 1)
-			elif curr_tile._map.pathfinder.get_tile_active(curr_tile._map.get_tile_at(curr_tile._position.x - 1, curr_tile._position.y)):
-				print("moving left")
-				dest_tile = curr_tile._map.get_tile_at(curr_tile._position.x - 1, curr_tile._position.y)
+		if stop_before_job_tile:
+			if closest_job_tile == curr_tile:
+				#We are standing on the work spot, so need to move before we can work the job
+				if curr_tile._map.pathfinder.get_tile_active(curr_tile._map.get_tile_at(curr_tile._position.x, curr_tile._position.y - 1)):
+					print("moving up")
+					dest_tile = curr_tile._map.get_tile_at(curr_tile._position.x, curr_tile._position.y - 1)
+				elif curr_tile._map.pathfinder.get_tile_active(curr_tile._map.get_tile_at(curr_tile._position.x + 1, curr_tile._position.y)):
+					print("moving right")
+					dest_tile = curr_tile._map.get_tile_at(curr_tile._position.x + 1, curr_tile._position.y)
+				elif curr_tile._map.pathfinder.get_tile_active(curr_tile._map.get_tile_at(curr_tile._position.x, curr_tile._position.y + 1)):
+					print("moving down")
+					dest_tile = curr_tile._map.get_tile_at(curr_tile._position.x, curr_tile._position.y + 1)
+				elif curr_tile._map.pathfinder.get_tile_active(curr_tile._map.get_tile_at(curr_tile._position.x - 1, curr_tile._position.y)):
+					print("moving left")
+					dest_tile = curr_tile._map.get_tile_at(curr_tile._position.x - 1, curr_tile._position.y)
 		curr_tile._map.pathfinder.enable_tile(curr_tile)
 		dest_tile = dest
 		return true
@@ -105,6 +270,9 @@ func abandon_job() -> void:
 
 	path_astar = null
 
+	_job.job_complete.disconnect(_on_job_ended)
+	_job.job_cancel.disconnect(_on_job_ended)
+	_job.job_started.disconnect(_on_job_started)
 	curr_tile._map.job_queue.enqueue(_job)
 	_job = null
 
@@ -140,10 +308,9 @@ func update_handle_movement(delta: float):
 		path_astar = null
 		return
 	elif next_tile.is_enterable() == Tile.Enterability.SOON:
-		print("can soon enter tile")
 		return
 
-	var dist_this_frame = speed * delta
+	var dist_this_frame = speed / next_tile.movement_cost * delta
 
 	var perc_this_frame = dist_this_frame / dist_total
 
@@ -154,6 +321,8 @@ func update_handle_movement(delta: float):
 		movement_percentage = 0;
 	
 	on_changed.emit(self)
+	if _item != null:
+		_item.on_changed.emit(_item)
 
 
 func update(delta: float) -> void:
@@ -175,9 +344,9 @@ func _on_job_ended(j: Job) -> void:
 	_job = null
 
 
-func _on_job_started(j: Job) -> void:
+func _on_job_started(_j: Job) -> void:
 	for c in curr_tile._map.characters:
-		if c.curr_tile == j._tile:
+		if c.curr_tile == closest_job_tile:
 			_can_work = false
 
 
@@ -218,6 +387,9 @@ func save():
 		path_data["values"] = path_values
 
 		save_dict["path_astar"] = path_data
+	
+	if _item != null:
+		save_dict["item"] = _item.save()
 
 	return save_dict
 
@@ -247,5 +419,11 @@ static func load(map: IslandMap, data: Dictionary) -> Character:
 		character._job = job
 		character._job.job_complete.connect(character._on_job_ended)
 		character._job.job_cancel.connect(character._on_job_ended)
+		character._job.job_started.connect(character._on_job_started)
+	
+	if data.has("item"):
+		var item := Item.load(map, data["item"])
+		character._item = item
+		item.character = character
 
 	return character

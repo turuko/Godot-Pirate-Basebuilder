@@ -10,9 +10,12 @@ var map_controller: MapController
 var bmc: BuildModeController
 var tile_sprite_controller: TileMapController
 var character_sprite_controller: CharacterSpriteController
+var item_sprite_controller: ItemSpriteController
+var zone_sprite_controller: ZoneSpriteController
 var mouse_controller: MouseController
 
 const UNIT_SIZE: int = 32
+
 
 static var instance: GameManager
 
@@ -38,6 +41,8 @@ func on_scene_load():
 	bmc = game_root.get_node("Controllers/BuildModeController") as BuildModeController
 	tile_sprite_controller = game_root.get_node("Controllers/TileMapController") as TileMapController
 	character_sprite_controller = game_root.get_node("Controllers/CharacterSpriteController") as CharacterSpriteController
+	item_sprite_controller = game_root.get_node("Controllers/ItemSpriteController") as ItemSpriteController
+	zone_sprite_controller = game_root.get_node("Controllers/ZoneSpriteController") as ZoneSpriteController
 	mouse_controller = game_root.get_node("Controllers/MouseController") as MouseController
 
 	if not map_controller.is_node_ready():
@@ -45,6 +50,8 @@ func on_scene_load():
 
 	tile_sprite_controller.initialize(map_controller.map)
 	character_sprite_controller.initialize()
+	item_sprite_controller.initialize()
+	zone_sprite_controller.initialize()
 
 	var camera = get_viewport().get_camera_2d() as CameraController
 	camera.limit_bottom = floori((map_controller.map._height * UNIT_SIZE))

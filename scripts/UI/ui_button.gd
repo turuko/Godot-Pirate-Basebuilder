@@ -1,4 +1,4 @@
-extends Button
+class_name UIButton extends Button
 
 @export var signal_name: String
 @export var args: Array

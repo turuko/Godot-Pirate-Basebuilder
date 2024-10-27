@@ -1,6 +1,7 @@
 class_name JobQueue extends RefCounted
 
 signal job_enqueued(j: Job)
+signal job_dequeued(j: Job)
 
 var queue: Queue = Queue.new()#TODO: implement a data structure that is able to accomodate different types of jobs, priorities, etc.
 
@@ -14,7 +15,10 @@ func enqueue(j: Job) -> void:
 
 
 func dequeue() -> Job:
-	return queue.dequeue()
+	var job = queue.dequeue()
+	if job != null:
+		job_dequeued.emit(job)
+	return job
 
 
 func is_empty() -> bool:

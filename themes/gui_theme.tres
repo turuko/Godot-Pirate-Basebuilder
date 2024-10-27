@@ -1,35 +1,50 @@
-[gd_resource type="Theme" load_steps=9 format=3 uid="uid://d4gsgllllvwom"]
+[gd_resource type="Theme" load_steps=10 format=3 uid="uid://d4gsgllllvwom"]
 
 [ext_resource type="Texture2D" uid="uid://yefcyua8qv3o" path="res://assets/UI/kenney/Spritesheet/uipack_rpg_sheet.png" id="1_6gmqm"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_noshh"]
-atlas = ExtResource("1_6gmqm")
-region = Rect2(0, 49, 190, 49)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cjje8"]
-texture = SubResource("AtlasTexture_noshh")
-modulate_color = Color(0.407843, 0.407843, 0.407843, 1)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nmfra"]
+[ext_resource type="StyleBox" uid="uid://dcscf666ueolb" path="res://resources/build_button_highlight.tres" id="2_kw3wx"]
+[ext_resource type="Texture2D" uid="uid://dpdjbj2oryinp" path="res://assets/UI/kenney/PNG/buttonSquare_brown_pressed.png" id="2_ubanw"]
+[ext_resource type="FontFile" uid="uid://bbu7tx8ri0kx5" path="res://fonts/BOOTERFZ.ttf" id="3_5jahb"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8gqxq"]
 atlas = ExtResource("1_6gmqm")
 region = Rect2(0, 49, 190, 49)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ka6gv"]
+content_margin_left = 10.0
+content_margin_top = 20.0
+content_margin_right = 10.0
+content_margin_bottom = 15.0
 texture = SubResource("AtlasTexture_8gqxq")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u11l7"]
 atlas = ExtResource("1_6gmqm")
 region = Rect2(0, 98, 190, 45)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ru1ui"]
+content_margin_left = 10.0
+content_margin_top = 20.0
+content_margin_right = 10.0
+content_margin_bottom = 15.0
 texture = SubResource("AtlasTexture_u11l7")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7ngie"]
+texture = ExtResource("2_ubanw")
 
 [resource]
+default_font = ExtResource("3_5jahb")
+default_font_size = 24
 Button/font_sizes/font_size = 40
-Button/styles/disabled = SubResource("StyleBoxTexture_cjje8")
-Button/styles/focus = SubResource("StyleBoxEmpty_nmfra")
+Button/styles/disabled = SubResource("StyleBoxTexture_ka6gv")
+Button/styles/focus = ExtResource("2_kw3wx")
 Button/styles/hover = SubResource("StyleBoxTexture_ka6gv")
 Button/styles/normal = SubResource("StyleBoxTexture_ka6gv")
 Button/styles/pressed = SubResource("StyleBoxTexture_ru1ui")
+PanelContainer/styles/panel = SubResource("StyleBoxTexture_7ngie")

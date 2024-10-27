@@ -1,0 +1,19 @@
+[gd_resource type="StyleBoxTexture" load_steps=3 format=3 uid="uid://dcscf666ueolb"]
+
+[ext_resource type="Texture2D" uid="uid://yefcyua8qv3o" path="res://assets/UI/kenney/Spritesheet/uipack_rpg_sheet.png" id="1_w2oty"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8gqxq"]
+atlas = ExtResource("1_w2oty")
+region = Rect2(0, 49, 190, 49)
+
+[resource]
+content_margin_left = 10.0
+content_margin_top = 20.0
+content_margin_right = 10.0
+content_margin_bottom = 15.0
+texture = SubResource("AtlasTexture_8gqxq")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+modulate_color = Color(1, 0.945098, 0.670588, 1)

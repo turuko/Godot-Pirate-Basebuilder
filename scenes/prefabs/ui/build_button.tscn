@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://dvf48b1v0xd1w"]
+
+[ext_resource type="Theme" uid="uid://d4gsgllllvwom" path="res://themes/gui_theme.tres" id="1_h5wsh"]
+[ext_resource type="Script" path="res://scripts/UI/ui_button.gd" id="3_s3f5w"]
+
+[node name="BuildButton" type="Button"]
+offset_right = 129.0
+offset_bottom = 204.0
+scale = Vector2(0.6, 0.6)
+theme = ExtResource("1_h5wsh")
+text = "Wall"
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = true
+script = ExtResource("3_s3f5w")
+signal_name = "fixture_button_pressed"

@@ -1,17 +1,15 @@
 extends Node
 
 #UI related events
-signal sand_button_pressed(args: Array) # no args
-signal remove_button_pressed(args: Array) # no args
 signal fixture_button_pressed(args: Array) #string
+signal zone_button_pressed(args: Array) #string
 signal new_world_button_pressed(args: Array) #no args
 signal load_button_pressed(args: Array) #no args
 signal save_button_pressed(args: Array) #no args
 
 var ui_signals: Dictionary = {
-    "sand_button_pressed"  : sand_button_pressed, 
-    "remove_button_pressed": remove_button_pressed,
     "fixture_button_pressed"  : fixture_button_pressed,
+    "zone_button_pressed": zone_button_pressed,
     "new_world_button_pressed"  : new_world_button_pressed,
     "load_button_pressed"  : load_button_pressed,
     "save_button_pressed"  : save_button_pressed,

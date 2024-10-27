@@ -1,0 +1,50 @@
+[gd_scene load_steps=6 format=3 uid="uid://n47l3i5fr1sb"]
+
+[ext_resource type="Script" path="res://scripts/UI/Bottom Bar/bottom_bar.gd" id="1_c0uuo"]
+[ext_resource type="Theme" uid="uid://d4gsgllllvwom" path="res://themes/gui_theme.tres" id="2_5c0nj"]
+[ext_resource type="Script" path="res://scripts/UI/Bottom Bar/actions_menu.gd" id="2_8xopo"]
+[ext_resource type="Script" path="res://scripts/UI/Bottom Bar/build_menu.gd" id="3_r71yc"]
+[ext_resource type="Script" path="res://scripts/UI/Bottom Bar/zone_menu.gd" id="5_yjh80"]
+
+[node name="Control" type="MarginContainer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -117.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+script = ExtResource("1_c0uuo")
+
+[node name="ActionsMenu" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 20
+script = ExtResource("2_8xopo")
+
+[node name="BuildMenuButton" type="Button" parent="ActionsMenu"]
+custom_minimum_size = Vector2(190, 80)
+layout_mode = 2
+theme = ExtResource("2_5c0nj")
+text = "Build Menu"
+
+[node name="ZoneMenuButton" type="Button" parent="ActionsMenu"]
+custom_minimum_size = Vector2(190, 80)
+layout_mode = 2
+theme = ExtResource("2_5c0nj")
+text = "Zone Menu"
+
+[node name="BuildMenu" type="HBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 20
+script = ExtResource("3_r71yc")
+
+[node name="ZoneMenu" type="HBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 20
+script = ExtResource("5_yjh80")

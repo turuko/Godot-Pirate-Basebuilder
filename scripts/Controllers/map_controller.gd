@@ -47,8 +47,17 @@ func create_world_from_save():
 
 	var tiles: Array = save_data["tiles"]
 
+	var rooms_data: Array = save_data["rooms"]
+	for r in rooms_data:
+		var room = Room.load(map, r)
+		map.rooms.append(room)
+
 	for t in tiles:
 		map._tiles[t["x"]][t["y"]]._type = t["type"]
+		if t.has("room"):
+			for r in map.rooms:
+				if r.room_name == t["room"]:
+					map._tiles[t["x"]][t["y"]]._room = r
 
 	map.pathfinder = Path_AStar2.new(map)
 	
@@ -71,12 +80,21 @@ func create_world_from_save():
 		var character = Character.load(map, c)
 
 		print("Character: ", character.name, ", job: ", character._job)
-		map.characters.append(character)
+		map.add_character(character)
 
 	var fixtures_data: Array = save_data["fixtures"]
 	for f in fixtures_data:
-		var fix : Fixture = map.place_fixture(f["fixture_type"], map.get_tile_at(f["x"], f["y"]))
+		var fix : Fixture = map.place_fixture(f["fixture_type"], map.get_tile_at(f["x"], f["y"]), false)
 		fix._movement_multiplier = f["movement_multiplier"]
+
+	var items_data = save_data["item_manager"]["items"]
+	for k in items_data.keys():
+		var values = []
+		for i in items_data[k]:
+			values.append(Item.load(map, i))
+		map.item_manager.all_items[k] = values
+
+	
 
 	print("Jobs: ", map.job_queue.size())
 

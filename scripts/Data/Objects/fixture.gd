@@ -10,15 +10,21 @@ var _fixture_type: String
 #Mulitplier. A value of 2 halves movement speed. 0 = impassable
 var _movement_multiplier: float
 
+var _room_blocker: bool
+
 var _width:  int
 var _height: int
 
 var _max_health: int
 var _health: float = 0
 
+var _items_to_build: Dictionary
+var _build_time: float
+
 var _links_to_neighbour: bool
 
 var fixture_parameters: Dictionary #string, Variant
+var fixture_parameters_ref: DictionaryRef
 signal update_actions(f: Fixture, delta_time: float)
 
 
@@ -26,13 +32,24 @@ func clone() -> Fixture:
 	var f = Fixture.new()
 	f._fixture_type = self._fixture_type
 	f._movement_multiplier = self._movement_multiplier
+	f._room_blocker = self._room_blocker
 	f._width = self._width
 	f._height = self._height
 	f._max_health = self._max_health
 	f._links_to_neighbour = self._links_to_neighbour
+	f._items_to_build = self._items_to_build
+	
+	if self.is_enterable == null:
+		print("no is_enterable function")
+	
 	f.position_validation_func = Callable(self.position_validation_func)
 	f.is_enterable = Callable(self.is_enterable)
+	
+	if f.is_enterable == null:
+		print("f has no is enterable")
+	
 	f.fixture_parameters = self.fixture_parameters.duplicate()
+	f.fixture_parameters_ref = DictionaryRef.new(f.fixture_parameters)
 
 	for con in self.update_actions.get_connections():
 		f.update_actions.connect(con.callable)
@@ -40,15 +57,18 @@ func clone() -> Fixture:
 	return f
 
 
-static func create_prototype(type: String, max_health:float, move_cost: float = 1, w: int = 1, h: int = 1, ltn: bool = false) -> Fixture:
+static func create_prototype(type: String, max_health: float, building_requirements: Array, move_cost: float = 1.0, w: int = 1, h: int = 1, ltn: bool = false, blocker: bool = false) -> Fixture:
 	var f = Fixture.new()
 	f._fixture_type = type
 	f._movement_multiplier = move_cost
+	f._room_blocker = blocker
 	f._width = w
 	f._height = h
 	f._max_health = max_health
 	f._links_to_neighbour = ltn
 	f.position_validation_func = f.is_position_valid
+	f._items_to_build = building_requirements[1]
+	f._build_time = building_requirements[0]
 
 	return f
 
@@ -112,12 +132,14 @@ func update_health(value: float):
 
 
 func is_position_valid(t: Tile) -> bool:
-	
-	if t._type == Tile.TileType.WATER:
-		return false
+	for x_off in range(t._position.x, t._position.x + _width):
+		for y_off in range(t._position.y, t._position.y + _height):
+			var t2 = t._map.get_tile_at(x_off, y_off)
+			if t2._type == Tile.TileType.WATER:
+				return false
 
-	if t._fixture != null:
-		return false 
+			if t2._fixture != null:
+				return false 
 
 	#for c in t._map.characters:
 	#	if c.curr_tile == t:
