@@ -124,10 +124,8 @@ static func room_flood_fill(source_fixture: Fixture):
 	source_fixture.tile._room = null
 
 	if enclosed_area(source_fixture.tile) == false:
-		print("no enclosed area")
 		return
 	
-	print("Found enclosed area")
 
 	for t in source_fixture.tile.get_neighbours(true):
 		_flood_fill(t, old_room)
@@ -208,7 +206,6 @@ func save():
 		tiles_data.append(tile_data)
 	save_dict["tiles"] = tiles_data
 
-	print("Saving room: ", save_dict)
 
 	return save_dict
 

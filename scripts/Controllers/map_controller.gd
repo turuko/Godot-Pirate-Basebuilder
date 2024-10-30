@@ -27,7 +27,6 @@ func get_tile_at_world_coord(coord: Vector2) -> Tile:
 
 
 func new_world_button(_args):
-	print("new world button pressed")
 	get_tree().reload_current_scene()
 
 
@@ -79,7 +78,6 @@ func create_world_from_save():
 	for c in characters_data:
 		var character = Character.load(map, c)
 
-		print("Character: ", character.name, ", job: ", character._job)
 		map.add_character(character)
 
 	var fixtures_data: Array = save_data["fixtures"]
@@ -96,5 +94,4 @@ func create_world_from_save():
 
 	
 
-	print("Jobs: ", map.job_queue.size())
 

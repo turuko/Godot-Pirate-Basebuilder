@@ -28,8 +28,6 @@ func _load_sprites() -> void:
 			character_sprites[file_name.split(".")[0]] = load(path + "/" + file_name)
 	dir.list_dir_end()
 
-	print("char sprites: " + str(character_sprites.size()) + ", " + str(character_sprites))
-
 
 func _on_character_created(c: Character) -> void:
 	

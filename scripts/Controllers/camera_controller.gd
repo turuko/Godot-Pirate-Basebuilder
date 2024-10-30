@@ -45,7 +45,6 @@ func _move(delta: float) -> void:
 	#print("smoothed_position: " + str(smoothed_position) + ", screen pos: " + str(get_screen_center_position()) + ", target pos: " + str(get_target_position()))
 
 	if get_screen_center_position().distance_to(get_target_position()) >= 50:
-		print("resetting position")
 		position = get_screen_center_position()
 		return
 	
@@ -58,9 +57,9 @@ func _move(delta: float) -> void:
 	if Input.is_action_pressed("D"):
 		position.x += move_speed * delta
 
-	position = position.floor()
+	#position = position.floor()
 
 
 func drag(diff: Vector2) -> void:
 	position += (diff / zoom)
-	position = position.floor()
+	#position = position.floor()

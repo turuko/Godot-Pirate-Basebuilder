@@ -14,6 +14,8 @@ static func pretty_print_type(t: ZoneType):
 static func str_to_type(s: String) -> ZoneType:
     return ZoneType.get(s)
 
+signal on_changed(z: Zone)
+
 var _tiles: Array[Tile] = []
 
 var type: ZoneType

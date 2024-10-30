@@ -8,7 +8,6 @@ class_name JobActions
 
 
 static func job_completed( j: Job, _params: Array):
-	print("Job completed")
 	for t in j._tiles:
 		t._job = null
 
@@ -40,6 +39,20 @@ static func construction_start(j: Job, _params: Array):
 static func build_cancel( j: Job, _params: Array): 
 	for t in j._tiles:
 		t._job = null
+
+#
+# Bulldoze functions
+#
+
+static func bulldoze(j: Job, _params: Array):
+	var fixture = j._tiles[0]._fixture
+
+	if fixture == null:
+		printerr("Bulldozing on a tile with no fixture")
+		return
+
+	j._tiles[0].place_fixture(null)
+	
 
 
 #

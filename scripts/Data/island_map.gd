@@ -80,6 +80,9 @@ func generate():
 	pathfinder = Path_AStar2.new(self)
 
 	create_character(get_tile_at(_width / 2, _height / 2))
+	create_character(get_tile_at(_width / 2, _height / 2+1))
+	create_character(get_tile_at(_width / 2, _height / 2+2))
+	create_character(get_tile_at(_width / 2, _height / 2+3))
 	create_item_in_map("Logs", get_tile_at(_width / 2 + 1, _height / 2))
 	create_item_in_map("Logs", get_tile_at(_width / 2 + 10, _height / 2), 10)
 	
@@ -87,8 +90,7 @@ func generate():
 	create_item_in_map("Logs", get_tile_at(_width / 2 + 3, _height / 2 + 5), 40)
 	create_item_in_map("Logs", get_tile_at(_width / 2 + 4, _height / 2 + 5), 40)
 	create_item_in_map("Logs", get_tile_at(_width / 2 + 2, _height / 2 + 5), 40)
-	
-	print("ItemManager: ", item_manager.all_items)
+
 
 func update(delta: float) -> void:
 
@@ -109,7 +111,6 @@ func create_character(t: Tile) -> Character:
 
 func add_character(c: Character):
 	characters.append(c)
-	print("character item is null: ", c._item == null)
 	if c._item != null:
 		on_item_created.emit(c._item)
 	c.created_item.connect(func(i): on_item_created.emit(i))
@@ -289,6 +290,11 @@ func place_fixture(fixture_type: String, t: Tile, do_flood_fill: bool = true) ->
 func destroy_fixture(f: Fixture):
 	fixtures.erase(f)
 	on_fixture_destroyed.emit(f)
+	
+	if f._links_to_neighbour:
+		for n in f.tile.get_neighbours(true):
+			if n._fixture != null and n._fixture._fixture_type == f._fixture_type:
+				n._fixture.on_changed.emit(n._fixture)
 
 
 func create_item_in_map(item_type: String, t: Tile, amount = null) -> Item:
@@ -348,7 +354,6 @@ func save() -> Dictionary:
 	save_dict["characters"] = characters_save_data
 
 	var rooms_save_data = []
-	print("rooms in world: ", rooms.size())
 	for r in rooms:
 		rooms_save_data.append(r.save())
 

@@ -36,8 +36,6 @@ func _load_sprites() -> void:
 			item_sprites[file_name.split(".")[0]] = load(path + "/" + file_name)
 	dir.list_dir_end()
 
-	print("char sprites: " + str(item_sprites.size()) + ", " + str(item_sprites))
-
 
 func _on_item_created(i: Item) -> void:
 	
@@ -61,7 +59,6 @@ func _on_item_created(i: Item) -> void:
 
 
 func _on_item_destroyed(i: Item):
-	print("Calling destroy on an item")
 	if not item_node_map.has(i):
 		printerr("OnItemDestroyed - trying to delete visuals for item not in map")
 		return

@@ -49,7 +49,7 @@ func cancel_job():
 
 
 func save():
-	
+	print("job_complete connections: ", job_complete.get_connections())
 	var save_dict = {
 		"job_time": _job_time,
 		"job_type": _job_type,

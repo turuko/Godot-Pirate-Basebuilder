@@ -13,7 +13,6 @@ var moisture: Array[Array]
 
 func _noise_e(nx: float, ny: float):
     var n = -((e_noise.get_noise_2d(nx, ny)) / 2.0 - 0.5)
-    print("e_noise at ", nx, ", ", ny, ": ", n)
     return n
 
 func _noise_m(nx: float, ny: float):

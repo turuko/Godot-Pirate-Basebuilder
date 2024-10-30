@@ -3,6 +3,7 @@ class_name BuildModeController extends Node
 enum BuildMode {
 	ZONE,
 	FIXTURE,
+	BULLDOZE,
 	NONE,
 }
 
@@ -17,9 +18,14 @@ func _ready():
 		printerr("Error loading lua")
 	EventBus.fixture_button_pressed.connect(set_build_mode_fixture)
 	EventBus.zone_button_pressed.connect(set_build_mode_zone)
+	EventBus.bulldoze_button_pressed.connect(set_build_mode_bulldoze)
+
+
+func set_build_mode_bulldoze(_args: Array):
+	_build_mode = BuildMode.BULLDOZE
+
 
 func set_build_mode_fixture(args: Array): #string
-	
 	if args[0] == null:
 		_build_mode = BuildMode.NONE
 		return
@@ -42,7 +48,7 @@ func build(t: Array[Tile]) -> void:
 	match _build_mode:
 		BuildMode.FIXTURE:
 			var fixture_type = _build_mode_type
-			if map.is_fixture_placement_valid(fixture_type, t[0]) and t[0]._job == null:
+			if map.is_fixture_placement_valid(fixture_type, t[0]) and (t[0]._job == null or not t[0]._job is ConstructionJob):
 				#var lua_build = lua.pull_variant("Build")
 				var requirements = map.get_fixture_build_requirements(fixture_type)
 				var tiles: Array[Tile] = []
@@ -57,11 +63,17 @@ func build(t: Array[Tile]) -> void:
 				j.job_started.connect(JobActions.construction_start.bind([]))
 			
 				map.job_queue.enqueue(j)
-				print("job queue size: " + str(map.job_queue.size()))
 		BuildMode.ZONE:
 			var zone_type := Zone.str_to_type(_build_mode_type)
 			match zone_type:
 				Zone.ZoneType.STOCKPILE:
-					print("Creating stockpile")
 					map.add_zone(Stockpile.new(t))
+		BuildMode.BULLDOZE:
+			if t[0]._fixture == null:
+				return
+			
+			print("create bulldoze job")
+			var j = Job.new(t, Job.JobType.MISC)
+			j.job_complete.connect(JobActions.bulldoze.bind([]))
+			map.job_queue.enqueue(j)
 

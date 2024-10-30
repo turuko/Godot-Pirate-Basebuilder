@@ -78,7 +78,6 @@ static func despawn(n: Node2D) -> void:
 			break
 
 	if pm == null:
-		print("object wasn't spawned from pool. destroying")
 		n.queue_free()
 	else:
 		pm.pool.despawn(n)

@@ -21,3 +21,7 @@ func _ready():
 				button.icon = load(preview_path + "/" + file_name)
 		dir.list_dir_end()
 		add_child(button)
+	var bulldoze_button = build_button_prefab.instantiate() as UIButton
+	bulldoze_button.signal_name = "bulldoze_button_pressed"
+	bulldoze_button.text = "Deconstruct"
+	add_child(bulldoze_button)

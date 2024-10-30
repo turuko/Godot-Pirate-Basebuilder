@@ -108,6 +108,10 @@ func place_fixture(f_instance: Fixture):
 		for y_off in range(_position.y, _position.y + f_instance._height):
 			var t = _map.get_tile_at(x_off, y_off)
 			t._fixture = f_instance
+			for s in _map.zones.filter(func(z): return z.type == Zone.ZoneType.STOCKPILE):
+				if s._tiles.has(t):
+					s.remove_tile(t)
+
 
 	return true
 

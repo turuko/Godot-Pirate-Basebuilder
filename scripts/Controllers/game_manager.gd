@@ -62,8 +62,7 @@ func on_scene_load():
 	var real_value = (-1.2698e-7)*pow(map_controller.map._width,3) + 0.000104127*pow(map_controller.map._width,2) + -0.0273968*(map_controller.map._width) + 2.6254
 	var max_zoom_value = _round_to_nearest_tenth(real_value)
 	camera.max_zoom = Vector2(max(max_zoom_value, 0.1), max(max_zoom_value,0.1))
-	print("Map size: " + str(map_controller.map._width) + ", Max zoom: " + str(camera.max_zoom) + ", real: " + str(real_value)) 
-
+	
 	camera.position = Vector2(map_controller.map._width * UNIT_SIZE / 2.0, map_controller.map._height * UNIT_SIZE / 2.0)
 
 

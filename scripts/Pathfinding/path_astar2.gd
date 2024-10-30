@@ -57,6 +57,8 @@ func set_tile_weight(t: Tile):
 func get_path(start_tile: Tile, end_tile: Tile) -> Queue:
 	var path: Queue = Queue.new()
 	
+	print("start tile disabled: ", a_star.is_point_solid(nodes[start_tile]), ", end tile disabled: ", a_star.is_point_solid(nodes[end_tile]))
+	
 	var ids := Array(a_star.get_id_path(nodes[start_tile], nodes[end_tile]))
 
 	ids.map(func(id): path.enqueue(nodes.find_key(id)))

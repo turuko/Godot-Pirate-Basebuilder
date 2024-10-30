@@ -24,7 +24,6 @@ var _build_time: float
 var _links_to_neighbour: bool
 
 var fixture_parameters: Dictionary #string, Variant
-var fixture_parameters_ref: DictionaryRef
 signal update_actions(f: Fixture, delta_time: float)
 
 
@@ -49,7 +48,6 @@ func clone() -> Fixture:
 		print("f has no is enterable")
 	
 	f.fixture_parameters = self.fixture_parameters.duplicate()
-	f.fixture_parameters_ref = DictionaryRef.new(f.fixture_parameters)
 
 	for con in self.update_actions.get_connections():
 		f.update_actions.connect(con.callable)

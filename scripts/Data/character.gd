@@ -32,6 +32,7 @@ var closest_job_tile: Tile = null
 var _item: Item = null
 var _carrying_capacity: int = 5
 var _can_work: bool = true
+var _has_path: bool = false
 
 func _init(t: Tile, n: String):
 	curr_tile = t
@@ -39,8 +40,15 @@ func _init(t: Tile, n: String):
 	next_tile = t
 
 	t._map.pathfinder.disable_tile(t)
+	t._map.on_fixture_created.connect(update_pathfinding)
+	t._map.on_fixture_destroyed.connect(update_pathfinding)
 
 	name = n
+
+
+func update_pathfinding(f: Fixture):
+	if f._room_blocker:
+		_has_path = false
 
 
 func update_handle_job(delta: float):
@@ -48,34 +56,63 @@ func update_handle_job(delta: float):
 		_job = curr_tile._map.job_queue.dequeue()
 
 		if _job != null:
+			closest_job_tile = null
 			_job.job_complete.connect(_on_job_ended)
 			_job.job_cancel.connect(_on_job_ended)
 			_job.job_started.connect(_on_job_started)
 
-	if _job is ConstructionJob:
-		handle_construction_job(delta)
-	elif _job is HaulJob:
-		handle_haul_job(delta)
+	if _job != null:
+		if _job is ConstructionJob:
+			handle_construction_job(delta)
+		elif _job is HaulJob:
+			handle_haul_job(delta)
+		else:
+			handle_misc_job(delta)
+			
+
+func handle_misc_job(delta: float):
+	#curr_tile._map.pathfinder.enable_tile(curr_tile)
+	var found_path
+	if not _has_path:
+		found_path = get_path_to_job(true)
+		if get_path_to_job(true) == false:
+			abandon_job()
+			return
+	_has_path = true
+	
+	if curr_tile == dest_tile:
+		if _job != null:
+			_job.work_job(delta)
+
 
 func handle_haul_job(_delta: float):
 	var hj := _job as HaulJob
 	if _item != null and _item._object_type == hj.item_type_to_haul and (_item.stack_size == min(_carrying_capacity, hj._job_time) or not get_path_to_nearest_item(hj.item_type_to_haul, curr_tile == hj._tiles[0], false)):
 		
-		#if get_path_to_nearest_item(hj.item_type_to_haul) == false:
-		#	printerr("No items of the type to haul??")
-		#	abandon_job()
-		#	return
+		var found_path
+		if not _has_path:
+			found_path = get_path_to_job() 
+			if found_path == false:
+				curr_tile._map.item_manager.place_item(_item, curr_tile)
+				_item = null
+				abandon_job()
+				return
+		_has_path = true
 		
-		if get_path_to_job() == false:
-			return
 		if curr_tile == dest_tile:
 			hj.work_job(_item.stack_size)
 			curr_tile._map.item_manager.place_item(_item, curr_tile)
 			_item = null
+			_has_path = false
 	else:
-		if not get_path_to_nearest_item(hj.item_type_to_haul, curr_tile == hj._tiles[0], false):
-			abandon_job()
-			return
+		var found_path
+		if not _has_path:
+			found_path = get_path_to_nearest_item(hj.item_type_to_haul, curr_tile == hj._tiles[0], false)
+			if not found_path:
+				abandon_job()
+				return
+		
+		_has_path = true
 		
 		curr_tile._map.pathfinder.enable_tile(curr_tile)
 
@@ -104,6 +141,7 @@ func handle_haul_job(_delta: float):
 					elif result[1] is Item:
 						_item = result[1]
 						_item.character = self
+			_has_path = false
 
 
 func handle_construction_job(delta: float):
@@ -119,20 +157,33 @@ func handle_construction_job(delta: float):
 
 		if _item != null and _item._object_type == item_type and (_item.stack_size == min(_carrying_capacity, cj._required_items[item_type]) or not get_path_to_nearest_item(item_type)):
 			#Get path to job
-			if get_path_to_job(true) == false:
-				return
+			var found_path
+			if not _has_path:
+				found_path = get_path_to_job(true)
+				if found_path == false:
+					curr_tile._map.item_manager.place_item(_item, curr_tile)
+					_item = null
+					abandon_job()
+					return
+			
+			_has_path = true
 			
 			if curr_tile == dest_tile:
 				if _job != null:
 					cj.add_item(_item)
-					print("Item is null: ", _item == null)
+					_has_path = false
 					return
 		else:
 			#Character is not holding item of correct type or can hold more of it, so find and go to nearest item of required type
-			if not get_path_to_nearest_item(item_type):
-				abandon_job()
-				return
+			var found_path
+			if not _has_path:
+				found_path = get_path_to_nearest_item(item_type)
+				if not found_path:
+					abandon_job()
+					return
 
+			_has_path = true
+			
 			curr_tile._map.pathfinder.enable_tile(curr_tile)
 				
 			if curr_tile == dest_tile:
@@ -154,17 +205,23 @@ func handle_construction_job(delta: float):
 							_item.stack_size += result[1].stack_size
 							_item.on_changed.emit(_item)
 				else:
-					print("No item at pickup: ", _item == null)
 					if result[0]:
-						print("can pickup")
 						if result[1] is int:
 							_create_item(item_type, result[1])
 						elif result[1] is Item:
 							_item = result[1]
 							_item.character = self
+				_has_path = false
 	else:
-		if get_path_to_job(true) == false:
-				return
+		var found_path
+		if not _has_path:
+			found_path = get_path_to_job(true)
+			if found_path == false:
+					abandon_job()
+					return
+					
+		_has_path = true
+		
 		if curr_tile == dest_tile:
 			if _job != null:
 				if not _can_work:
@@ -178,10 +235,10 @@ func handle_construction_job(delta: float):
 						printerr("Should character not have an item of some kind here?!")
 						return
 					cj.add_item(_item)
-					print("Item is null: ", _item == null)
 					return
 
 				cj.work_job(delta)
+
 
 func _create_item(item_type: String, amount: int):
 	_item = Item.create_instance(curr_tile._map._item_prototypes[item_type], amount)
@@ -213,19 +270,23 @@ func get_path_to_nearest_item(item_type: String, exclude_current_tile: bool = fa
 		dest_tile = dest
 		return true
 
+
 func get_path_to_job(stop_before_job_tile: bool = false) -> bool:
 	var shortest_length := 10000000
 	var dest = null
 
-	var shortest_length_job = 100000000
-	for t in _job._tiles:
-		var path = curr_tile._map.pathfinder.get_path(curr_tile, t)
-		if path.size() == 0:
-			continue
-		if path.size() < shortest_length_job:
-			shortest_length_job = path.size()
-			closest_job_tile = t
-
+	if _job._tiles.size() > 1:
+		var shortest_length_job = 100000000
+		for t in _job._tiles:
+			var path = curr_tile._map.pathfinder.get_path(curr_tile, t)
+			if path.size() == 0:
+				continue
+			if path.size() < shortest_length_job:
+				shortest_length_job = path.size()
+				closest_job_tile = t
+	else:
+		closest_job_tile = _job._tiles[0]
+	
 	if stop_before_job_tile == true:
 		for n in closest_job_tile.get_neighbours(true):
 			if n == null:
@@ -248,16 +309,12 @@ func get_path_to_job(stop_before_job_tile: bool = false) -> bool:
 			if closest_job_tile == curr_tile:
 				#We are standing on the work spot, so need to move before we can work the job
 				if curr_tile._map.pathfinder.get_tile_active(curr_tile._map.get_tile_at(curr_tile._position.x, curr_tile._position.y - 1)):
-					print("moving up")
 					dest_tile = curr_tile._map.get_tile_at(curr_tile._position.x, curr_tile._position.y - 1)
 				elif curr_tile._map.pathfinder.get_tile_active(curr_tile._map.get_tile_at(curr_tile._position.x + 1, curr_tile._position.y)):
-					print("moving right")
 					dest_tile = curr_tile._map.get_tile_at(curr_tile._position.x + 1, curr_tile._position.y)
 				elif curr_tile._map.pathfinder.get_tile_active(curr_tile._map.get_tile_at(curr_tile._position.x, curr_tile._position.y + 1)):
-					print("moving down")
 					dest_tile = curr_tile._map.get_tile_at(curr_tile._position.x, curr_tile._position.y + 1)
 				elif curr_tile._map.pathfinder.get_tile_active(curr_tile._map.get_tile_at(curr_tile._position.x - 1, curr_tile._position.y)):
-					print("moving left")
 					dest_tile = curr_tile._map.get_tile_at(curr_tile._position.x - 1, curr_tile._position.y)
 		curr_tile._map.pathfinder.enable_tile(curr_tile)
 		dest_tile = dest
@@ -293,6 +350,7 @@ func update_handle_movement(delta: float):
 			return
 
 		next_tile = path_astar.dequeue()
+		#curr_tile._map.pathfinder.enable_tile(curr_tile)
 
 		if next_tile == curr_tile:
 			printerr("next tile == current tile")
@@ -318,6 +376,7 @@ func update_handle_movement(delta: float):
 
 	if movement_percentage >= 1:
 		curr_tile = next_tile
+		curr_tile._map.pathfinder.enable_tile(curr_tile)
 		movement_percentage = 0;
 	
 	on_changed.emit(self)
@@ -342,6 +401,7 @@ func _on_job_ended(j: Job) -> void:
 		printerr("Character being told about job that is not his")
 	
 	_job = null
+	_has_path = false
 
 
 func _on_job_started(_j: Job) -> void:

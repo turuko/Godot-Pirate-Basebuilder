@@ -1,5 +1,4 @@
 class_name Stockpile extends Zone
-
 var filter : Dictionary = {}
 
 var items: Array[Item] = []
@@ -9,6 +8,18 @@ var haul_jobs: Array[HaulJob] = []
 
 func _init(tiles: Array[Tile]):
 	super(tiles, ZoneType.STOCKPILE)
+	var tiles_to_delete = []
+	for t in _tiles:
+		if (t._fixture != null) or (t._job != null and t._job is ConstructionJob):
+			tiles_to_delete.append(t)
+			continue
+			
+		for z in GameManager.instance.map_controller.map.zones:
+			if z._tiles.has(t):
+				tiles_to_delete.append(t)
+	for t in tiles_to_delete:
+		_tiles.erase(t)
+	
 	var map = GameManager.instance.map_controller.map
 	map.item_manager.item_placed.connect(add_item)
 	for key in map._item_prototypes:
@@ -16,6 +27,9 @@ func _init(tiles: Array[Tile]):
 		update_haul_jobs(key)
 
 
+func remove_tile(t: Tile):
+	_tiles.erase(t)
+	on_changed.emit(self)
 
 
 func update_haul_jobs(item_type: String):
@@ -61,7 +75,6 @@ func set_filter(item_type: String, value: bool):
 func add_item(t, i): 
 	if _tiles.has(t): 
 		items.append(i)
-	print("added item")
 
 
 func remove_item(i):
