@@ -48,7 +48,7 @@ func _init(t: Tile, n: String):
 
 func update_pathfinding(f: Fixture):
 	if f._room_blocker:
-		_has_path = false
+		path_astar = null
 
 
 func update_handle_job(delta: float):
