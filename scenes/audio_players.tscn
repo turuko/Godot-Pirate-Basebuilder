@@ -1,0 +1,29 @@
+[gd_scene load_steps=10 format=3 uid="uid://cuy5uisfwy3ws"]
+
+[ext_resource type="AudioStream" uid="uid://bv47xr83cwcu7" path="res://assets/audio/Pirate 1.mp3" id="1_siuwn"]
+[ext_resource type="AudioStream" uid="uid://be2tga1qwjd6j" path="res://assets/audio/Pirate 2.mp3" id="2_1we0j"]
+[ext_resource type="AudioStream" uid="uid://dt8ba1glhdh8o" path="res://assets/audio/Pirate 3.mp3" id="3_ml7ij"]
+[ext_resource type="AudioStream" uid="uid://c6l7co4dpuede" path="res://assets/audio/Pirate 4.mp3" id="4_6138x"]
+[ext_resource type="AudioStream" uid="uid://sy7gevl8255j" path="res://assets/audio/Pirate 5.mp3" id="5_3mvkw"]
+[ext_resource type="AudioStream" uid="uid://c1874xt0mi8hr" path="res://assets/audio/Pirate 6.mp3" id="6_0jw8i"]
+[ext_resource type="AudioStream" uid="uid://rai2kee1w7cu" path="res://assets/audio/Pirate 7.mp3" id="7_npf17"]
+[ext_resource type="AudioStream" uid="uid://st0mdl01xcg6" path="res://assets/audio/Pirate 8.mp3" id="8_wmsok"]
+
+[sub_resource type="AudioStreamPlaylist" id="AudioStreamPlaylist_g16cp"]
+shuffle = true
+stream_count = 8
+stream_0 = ExtResource("1_siuwn")
+stream_1 = ExtResource("2_1we0j")
+stream_2 = ExtResource("3_ml7ij")
+stream_3 = ExtResource("4_6138x")
+stream_4 = ExtResource("5_3mvkw")
+stream_5 = ExtResource("6_0jw8i")
+stream_6 = ExtResource("7_npf17")
+stream_7 = ExtResource("8_wmsok")
+
+[node name="AudioPlayers" type="Node"]
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamPlaylist_g16cp")
+autoplay = true
+bus = &"Music"

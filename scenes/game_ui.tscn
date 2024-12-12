@@ -1,0 +1,135 @@
+[gd_scene load_steps=11 format=3 uid="uid://c87c0h6780h1x"]
+
+[ext_resource type="Theme" uid="uid://d4gsgllllvwom" path="res://themes/gui_theme.tres" id="1_6vobt"]
+[ext_resource type="Script" path="res://scripts/UI/ui_button.gd" id="2_lj2gl"]
+[ext_resource type="Texture2D" uid="uid://c42yohv35uatx" path="res://assets/UI/kenney/PNG/panel_brown.png" id="3_bkgcf"]
+[ext_resource type="Script" path="res://scripts/UI/ui_inspector_tile_position.gd" id="4_kqgoi"]
+[ext_resource type="Script" path="res://scripts/UI/ui_inspector_tile_type.gd" id="5_o5u66"]
+[ext_resource type="Script" path="res://scripts/UI/ui_inspector_room.gd" id="6_lt2c1"]
+[ext_resource type="Script" path="res://scripts/UI/ui_inspector_fixture.gd" id="7_wo6j0"]
+[ext_resource type="Script" path="res://scripts/UI/ui_inspector_item.gd" id="8_slywt"]
+[ext_resource type="PackedScene" uid="uid://n47l3i5fr1sb" path="res://scenes/bottom_bar.tscn" id="9_auuut"]
+[ext_resource type="Script" path="res://scripts/Controllers/camera_controller.gd" id="10_56ani"]
+
+[node name="SubViewportContainer" type="SubViewportContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="CanvasLayer" type="CanvasLayer" parent="SubViewport"]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SubViewport/CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="New World" type="Button" parent="SubViewport/CanvasLayer/HBoxContainer"]
+custom_minimum_size = Vector2(170, 40)
+layout_mode = 2
+theme = ExtResource("1_6vobt")
+theme_override_font_sizes/font_size = 24
+text = "New World"
+script = ExtResource("2_lj2gl")
+signal_name = "new_world_button_pressed"
+
+[node name="Load" type="Button" parent="SubViewport/CanvasLayer/HBoxContainer"]
+custom_minimum_size = Vector2(170, 40)
+layout_mode = 2
+theme = ExtResource("1_6vobt")
+theme_override_font_sizes/font_size = 24
+text = "Load"
+script = ExtResource("2_lj2gl")
+signal_name = "load_button_pressed"
+
+[node name="Save" type="Button" parent="SubViewport/CanvasLayer/HBoxContainer"]
+custom_minimum_size = Vector2(170, 40)
+layout_mode = 2
+theme = ExtResource("1_6vobt")
+theme_override_font_sizes/font_size = 24
+text = "Save"
+script = ExtResource("2_lj2gl")
+signal_name = "save_button_pressed"
+
+[node name="Tile Inspector" type="NinePatchRect" parent="SubViewport/CanvasLayer"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -325.0
+offset_top = -159.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme = ExtResource("1_6vobt")
+texture = ExtResource("3_bkgcf")
+region_rect = Rect2(0, 0, 100, 100)
+patch_margin_left = 25
+patch_margin_top = 25
+patch_margin_right = 25
+patch_margin_bottom = 25
+
+[node name="Container" type="VBoxContainer" parent="SubViewport/CanvasLayer/Tile Inspector"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -7.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TilePosition" type="Label" parent="SubViewport/CanvasLayer/Tile Inspector/Container"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Tile Position: [XXX, YYY]"
+script = ExtResource("4_kqgoi")
+
+[node name="TileType" type="Label" parent="SubViewport/CanvasLayer/Tile Inspector/Container"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Tile Type: Water"
+script = ExtResource("5_o5u66")
+
+[node name="RoomIndex" type="Label" parent="SubViewport/CanvasLayer/Tile Inspector/Container"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Room Index: 0000"
+script = ExtResource("6_lt2c1")
+
+[node name="FixtureType" type="Label" parent="SubViewport/CanvasLayer/Tile Inspector/Container"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Fixture Type: NULL"
+script = ExtResource("7_wo6j0")
+
+[node name="Item" type="Label" parent="SubViewport/CanvasLayer/Tile Inspector/Container"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Item: NULL"
+script = ExtResource("8_slywt")
+
+[node name="Control" parent="SubViewport/CanvasLayer" instance=ExtResource("9_auuut")]
+offset_top = -120.0
+offset_right = -326.0
+
+[node name="Camera2D" type="Camera2D" parent="SubViewport"]
+limit_left = -4000
+limit_top = -4000
+limit_right = 4000
+limit_bottom = 4000
+position_smoothing_enabled = true
+rotation_smoothing_enabled = true
+editor_draw_limits = true
+script = ExtResource("10_56ani")
+move_speed = 600.0
+zoom_speed = 4.5
+zoom_speed_damp = 0.6

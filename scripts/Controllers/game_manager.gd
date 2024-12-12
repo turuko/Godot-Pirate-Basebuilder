@@ -19,12 +19,17 @@ const UNIT_SIZE: int = 32
 
 static var instance: GameManager
 
+
+#Global variables
+
+
 func _ready():
 	if not instance == null:
 		printerr("more than one gamemanager")
 		return
 	instance = self
 	on_scene_load()
+	
 	
 
 # Called when the node enters the scene tree for the first time.
@@ -35,7 +40,10 @@ func on_scene_load():
 
 	var game_root = get_node("/root/Game")
 	game_root.add_child.call_deferred(world_tile_map)
+	game_root.move_child.call_deferred(world_tile_map, 0)
 	game_root.add_child.call_deferred(job_tile_map)
+	game_root.move_child.call_deferred(job_tile_map, 0)
+	
 
 	map_controller = game_root.get_node("Controllers/MapController") as MapController
 	bmc = game_root.get_node("Controllers/BuildModeController") as BuildModeController
@@ -65,7 +73,6 @@ func on_scene_load():
 	
 	camera.position = Vector2(map_controller.map._width * UNIT_SIZE / 2.0, map_controller.map._height * UNIT_SIZE / 2.0)
 
-
 func _round_to_nearest_tenth(n: float) -> float:
 	# Multiply the number by 10 to shift the digit you want to round to the units place
 	var shifted_number = n * 10
@@ -77,4 +84,3 @@ func _round_to_nearest_tenth(n: float) -> float:
 	var result = rounded_number / 10
 
 	return result
-

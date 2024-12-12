@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://rai2kee1w7cu"
+path="res://.godot/imported/Pirate 7.mp3-b3c53706be1df48c0027c49529439e6d.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/Pirate 7.mp3"
+dest_files=["res://.godot/imported/Pirate 7.mp3-b3c53706be1df48c0027c49529439e6d.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

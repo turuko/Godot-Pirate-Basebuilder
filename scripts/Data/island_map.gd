@@ -81,8 +81,6 @@ func generate():
 
 	create_character(get_tile_at(_width / 2, _height / 2))
 	create_character(get_tile_at(_width / 2, _height / 2+1))
-	create_character(get_tile_at(_width / 2, _height / 2+2))
-	create_character(get_tile_at(_width / 2, _height / 2+3))
 	create_item_in_map("Logs", get_tile_at(_width / 2 + 1, _height / 2))
 	create_item_in_map("Logs", get_tile_at(_width / 2 + 10, _height / 2), 10)
 	

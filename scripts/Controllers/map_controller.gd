@@ -12,7 +12,10 @@ func _ready():
 		_load = false
 		create_world_from_save()
 	else:
-		create_new_world()
+		if Globals.map_seed == -1 and Globals.map_size == Vector2i.ZERO:
+			create_new_world()
+		else:
+			create_new_world(Globals.map_size, Globals.map_seed)
 
 
 func _process(delta):
@@ -36,8 +39,14 @@ func load_world(_save_data):
 	get_tree().reload_current_scene()
 
 
-func create_new_world():
-	map = IslandMap.new()
+func create_new_world(size: Vector2i = Vector2i(200, 200), seed: int = 0):
+	var e_seed = seed ^ 0xDEADBEEF
+	var m_seed = ~seed
+	
+	if seed == 0:
+		map = IslandMap.new(size.x, size.y)
+	else:	
+		map = IslandMap.new(size.x, size.y, e_seed, m_seed)
 	map.generate()
 
 
@@ -93,5 +102,3 @@ func create_world_from_save():
 		map.item_manager.all_items[k] = values
 
 	
-
-

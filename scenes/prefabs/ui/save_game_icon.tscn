@@ -1,0 +1,40 @@
+[gd_scene load_steps=4 format=3 uid="uid://dicbujnj3fi"]
+
+[ext_resource type="Theme" uid="uid://d4gsgllllvwom" path="res://themes/gui_theme.tres" id="1_vtsus"]
+[ext_resource type="Texture2D" uid="uid://c5pt78cs0ujt6" path="res://assets/Icon.png" id="2_vlnw6"]
+[ext_resource type="Theme" uid="uid://hdsy7rphi8iq" path="res://themes/menu_theme.tres" id="3_mpenv"]
+
+[node name="SaveGameIcon" type="PanelContainer"]
+custom_minimum_size = Vector2(150, 200)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -100.0
+offset_right = 75.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_vtsus")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(130, 130)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+texture = ExtResource("2_vlnw6")
+expand_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("3_mpenv")
+theme_override_font_sizes/font_size = 16
+text = "Save name
+Timestamp"
+horizontal_alignment = 1

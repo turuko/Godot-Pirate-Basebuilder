@@ -1,0 +1,445 @@
+[gd_scene load_steps=17 format=3 uid="uid://d2ldmkewrqcd8"]
+
+[ext_resource type="Script" path="res://scripts/UI/Menus/main_menu_controller.gd" id="1_5idrw"]
+[ext_resource type="Texture2D" uid="uid://cx0cc2pk0fvjq" path="res://assets/UI/download.png" id="2_64jm7"]
+[ext_resource type="Script" path="res://scripts/UI/Menus/main_menu.gd" id="3_hx6q8"]
+[ext_resource type="Theme" uid="uid://hdsy7rphi8iq" path="res://themes/menu_theme.tres" id="3_k1tp6"]
+[ext_resource type="Texture2D" uid="uid://c42yohv35uatx" path="res://assets/UI/kenney/PNG/panel_brown.png" id="6_mj4if"]
+[ext_resource type="Script" path="res://scripts/UI/Menus/options_menu.gd" id="7_5q8pr"]
+[ext_resource type="Script" path="res://scripts/UI/Menus/new_game_menu.gd" id="7_sdbs6"]
+[ext_resource type="Script" path="res://scripts/UI/Menus/load_game_menu.gd" id="8_y6iyv"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_aqgr0"]
+font_size = 120
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 10
+shadow_color = Color(0.109804, 0.109804, 0.109804, 0.72549)
+shadow_offset = Vector2(2, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ngfvt"]
+texture = ExtResource("6_mj4if")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k1yym"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.717647, 0.568627, 0.415686, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_o3rvc"]
+color = Color(0.717647, 0.556863, 0.403922, 1)
+thickness = 2
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g7k5w"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_mkw77"]
+content_margin_right = 3.0
+color = Color(0.717647, 0.556863, 0.403922, 1)
+grow_begin = 0.0
+grow_end = 0.0
+thickness = 3
+vertical = true
+
+[sub_resource type="Animation" id="Animation_mfi1g"]
+resource_name = "Title Scaling"
+length = 3.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Title:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.5, 1.5), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1hkq6"]
+_data = {
+"Title Scaling": SubResource("Animation_mfi1g")
+}
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5idrw")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_64jm7")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -384.0
+offset_top = 150.0
+offset_right = 386.0
+offset_bottom = 275.0
+grow_horizontal = 2
+rotation = -0.139626
+pivot_offset = Vector2(385, 62)
+text = "Project Seaworthy"
+label_settings = SubResource("LabelSettings_aqgr0")
+
+[node name="MainMenu" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -111.0
+offset_top = -150.0
+offset_right = 111.0
+offset_bottom = 194.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_k1tp6")
+script = ExtResource("3_hx6q8")
+
+[node name="NewGameButton" type="Button" parent="MainMenu"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+text = "New Game"
+
+[node name="LoadGameButton" type="Button" parent="MainMenu"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+text = "Load Game"
+
+[node name="OptionsButton" type="Button" parent="MainMenu"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+text = "Options"
+
+[node name="ExitButton" type="Button" parent="MainMenu"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+text = "Exit"
+
+[node name="NewGameMenu" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -334.0
+offset_top = -207.0
+offset_right = 336.0
+offset_bottom = 408.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_k1tp6")
+theme_override_styles/panel = SubResource("StyleBoxTexture_ngfvt")
+script = ExtResource("7_sdbs6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="NewGameMenu"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="NewGameMenu/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+
+[node name="Label" type="Label" parent="NewGameMenu/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+theme_override_font_sizes/font_size = 30
+text = "Map Size:  "
+
+[node name="MapSizeSelector" type="OptionButton" parent="NewGameMenu/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+theme_override_font_sizes/font_size = 30
+selected = 0
+item_count = 3
+popup/item_0/text = "Small"
+popup/item_1/text = "Medium"
+popup/item_1/id = 1
+popup/item_2/text = "Large"
+popup/item_2/id = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="NewGameMenu/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+
+[node name="Seed" type="Label" parent="NewGameMenu/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+theme_override_font_sizes/font_size = 30
+text = "Map Seed: "
+
+[node name="Map Seed" type="LineEdit" parent="NewGameMenu/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("3_k1tp6")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_k1yym")
+text = "gfdgdfgdfgfdg"
+
+[node name="HSeparator" type="HSeparator" parent="NewGameMenu/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+theme_override_constants/separation = 20
+theme_override_styles/separator = SubResource("StyleBoxLine_o3rvc")
+
+[node name="StartNewGameButton" type="Button" parent="NewGameMenu/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("3_k1tp6")
+text = "Start"
+
+[node name="BackButton" type="Button" parent="NewGameMenu"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme = ExtResource("3_k1tp6")
+theme_override_font_sizes/font_size = 20
+text = "Back"
+
+[node name="OptionsMenu" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -334.0
+offset_top = -207.0
+offset_right = 336.0
+offset_bottom = 408.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_k1tp6")
+theme_override_styles/panel = SubResource("StyleBoxTexture_ngfvt")
+script = ExtResource("7_5q8pr")
+
+[node name="HBox" type="HBoxContainer" parent="OptionsMenu"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+
+[node name="HBox" type="VBoxContainer" parent="OptionsMenu/HBox"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+
+[node name="Label" type="Label" parent="OptionsMenu/HBox/HBox"]
+layout_mode = 2
+text = "Graphics:"
+
+[node name="Resolution" type="HBoxContainer" parent="OptionsMenu/HBox/HBox"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+
+[node name="Label" type="Label" parent="OptionsMenu/HBox/HBox/Resolution"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+theme_override_font_sizes/font_size = 30
+text = "Resolution:"
+
+[node name="VSeparator" type="VSeparator" parent="OptionsMenu/HBox/HBox/Resolution"]
+layout_mode = 2
+theme_override_constants/separation = 29
+theme_override_styles/separator = SubResource("StyleBoxEmpty_g7k5w")
+
+[node name="ResolutionSelector" type="OptionButton" parent="OptionsMenu/HBox/HBox/Resolution"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+theme_override_font_sizes/font_size = 20
+
+[node name="DisplayMode" type="HBoxContainer" parent="OptionsMenu/HBox/HBox"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+
+[node name="Label" type="Label" parent="OptionsMenu/HBox/HBox/DisplayMode"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+theme_override_font_sizes/font_size = 30
+text = "Display Mode:"
+
+[node name="DisplayModeSelector" type="OptionButton" parent="OptionsMenu/HBox/HBox/DisplayMode"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+theme_override_font_sizes/font_size = 20
+selected = 0
+item_count = 3
+popup/item_0/text = "Windowed"
+popup/item_1/text = "Borderless Fullscreen"
+popup/item_1/id = 1
+popup/item_2/text = "Fullscreen"
+popup/item_2/id = 2
+
+[node name="VSeparator" type="VSeparator" parent="OptionsMenu/HBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+theme_override_styles/separator = SubResource("StyleBoxLine_mkw77")
+
+[node name="HBox2" type="VBoxContainer" parent="OptionsMenu/HBox"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+
+[node name="Label" type="Label" parent="OptionsMenu/HBox/HBox2"]
+layout_mode = 2
+text = "Audio:"
+
+[node name="MainAudio" type="HBoxContainer" parent="OptionsMenu/HBox/HBox2"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+
+[node name="Label" type="Label" parent="OptionsMenu/HBox/HBox2/MainAudio"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+theme_override_font_sizes/font_size = 30
+text = "Main:"
+
+[node name="VSeparator" type="VSeparator" parent="OptionsMenu/HBox/HBox2/MainAudio"]
+layout_mode = 2
+theme_override_constants/separation = 110
+theme_override_styles/separator = SubResource("StyleBoxEmpty_g7k5w")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OptionsMenu/HBox/HBox2/MainAudio"]
+layout_mode = 2
+
+[node name="MainVolume" type="HSlider" parent="OptionsMenu/HBox/HBox2/MainAudio/VBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("3_k1tp6")
+value = 100.0
+rounded = true
+
+[node name="MainVolumeLabel" type="Label" parent="OptionsMenu/HBox/HBox2/MainAudio/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "100%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Music" type="HBoxContainer" parent="OptionsMenu/HBox/HBox2"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+
+[node name="Label" type="Label" parent="OptionsMenu/HBox/HBox2/Music"]
+layout_mode = 2
+theme = ExtResource("3_k1tp6")
+theme_override_font_sizes/font_size = 30
+text = "Music:"
+
+[node name="VSeparator" type="VSeparator" parent="OptionsMenu/HBox/HBox2/Music"]
+layout_mode = 2
+theme_override_constants/separation = 95
+theme_override_styles/separator = SubResource("StyleBoxEmpty_g7k5w")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OptionsMenu/HBox/HBox2/Music"]
+layout_mode = 2
+
+[node name="MusicVolume" type="HSlider" parent="OptionsMenu/HBox/HBox2/Music/VBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("3_k1tp6")
+value = 100.0
+rounded = true
+
+[node name="MusicVolumeLabel" type="Label" parent="OptionsMenu/HBox/HBox2/Music/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "100%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="OptionsMenu"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 20
+text = "Back"
+
+[node name="LoadGameMenu" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -334.0
+offset_top = -207.0
+offset_right = 336.0
+offset_bottom = 408.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_k1tp6")
+theme_override_styles/panel = SubResource("StyleBoxTexture_ngfvt")
+script = ExtResource("8_y6iyv")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="LoadGameMenu"]
+custom_minimum_size = Vector2(0, 515)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="GridContainer" type="GridContainer" parent="LoadGameMenu/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 4
+
+[node name="Button" type="Button" parent="LoadGameMenu"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 20
+text = "Back"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_1hkq6")
+}
+
+[connection signal="pressed" from="MainMenu/NewGameButton" to="MainMenu" method="_on_new_game_button_pressed"]
+[connection signal="pressed" from="MainMenu/LoadGameButton" to="MainMenu" method="_on_load_game_button_pressed"]
+[connection signal="pressed" from="MainMenu/OptionsButton" to="MainMenu" method="_on_options_button_pressed"]
+[connection signal="pressed" from="MainMenu/ExitButton" to="MainMenu" method="_on_exit_button_pressed"]
+[connection signal="pressed" from="NewGameMenu/VBoxContainer/StartNewGameButton" to="NewGameMenu" method="_on_start_new_game_button_pressed"]
+[connection signal="pressed" from="NewGameMenu/BackButton" to="NewGameMenu" method="_on_back_button_pressed"]
+[connection signal="item_selected" from="OptionsMenu/HBox/HBox/Resolution/ResolutionSelector" to="OptionsMenu" method="_on_resolution_selector_item_selected"]
+[connection signal="item_selected" from="OptionsMenu/HBox/HBox/DisplayMode/DisplayModeSelector" to="OptionsMenu" method="_on_display_mode_selector_item_selected"]
+[connection signal="value_changed" from="OptionsMenu/HBox/HBox2/MainAudio/VBoxContainer/MainVolume" to="OptionsMenu" method="_on_main_volume_value_changed"]
+[connection signal="value_changed" from="OptionsMenu/HBox/HBox2/Music/VBoxContainer/MusicVolume" to="OptionsMenu" method="_on_music_volume_value_changed"]
+[connection signal="pressed" from="OptionsMenu/Button" to="OptionsMenu" method="_on_back_button_pressed"]
+[connection signal="pressed" from="LoadGameMenu/Button" to="LoadGameMenu" method="_on_button_pressed"]
