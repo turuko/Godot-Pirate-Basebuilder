@@ -1,0 +1,188 @@
+[gd_scene load_steps=7 format=3 uid="uid://duw0tgygyuvdc"]
+
+[ext_resource type="Theme" uid="uid://hdsy7rphi8iq" path="res://themes/menu_theme.tres" id="1_flk0b"]
+[ext_resource type="Texture2D" uid="uid://c42yohv35uatx" path="res://assets/UI/kenney/PNG/panel_brown.png" id="2_fd076"]
+[ext_resource type="Script" path="res://scripts/UI/Menus/options_menu.gd" id="3_0njva"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ngfvt"]
+texture = ExtResource("2_fd076")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g7k5w"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_mkw77"]
+content_margin_right = 3.0
+color = Color(0.717647, 0.556863, 0.403922, 1)
+grow_begin = 0.0
+grow_end = 0.0
+thickness = 3
+vertical = true
+
+[node name="OptionsMenu" type="PanelContainer"]
+visible = false
+custom_minimum_size = Vector2(815, 615)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -334.0
+offset_top = -207.0
+offset_right = 336.0
+offset_bottom = 408.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_flk0b")
+theme_override_styles/panel = SubResource("StyleBoxTexture_ngfvt")
+script = ExtResource("3_0njva")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme = ExtResource("1_flk0b")
+
+[node name="HBox" type="VBoxContainer" parent="HBox"]
+layout_mode = 2
+theme = ExtResource("1_flk0b")
+
+[node name="Label" type="Label" parent="HBox/HBox"]
+layout_mode = 2
+text = "Graphics:"
+
+[node name="Resolution" type="HBoxContainer" parent="HBox/HBox"]
+layout_mode = 2
+theme = ExtResource("1_flk0b")
+
+[node name="Label" type="Label" parent="HBox/HBox/Resolution"]
+layout_mode = 2
+theme = ExtResource("1_flk0b")
+theme_override_font_sizes/font_size = 30
+text = "Resolution:"
+
+[node name="VSeparator" type="VSeparator" parent="HBox/HBox/Resolution"]
+layout_mode = 2
+theme_override_constants/separation = 29
+theme_override_styles/separator = SubResource("StyleBoxEmpty_g7k5w")
+
+[node name="ResolutionSelector" type="OptionButton" parent="HBox/HBox/Resolution"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme = ExtResource("1_flk0b")
+theme_override_font_sizes/font_size = 20
+
+[node name="DisplayMode" type="HBoxContainer" parent="HBox/HBox"]
+layout_mode = 2
+theme = ExtResource("1_flk0b")
+
+[node name="Label" type="Label" parent="HBox/HBox/DisplayMode"]
+layout_mode = 2
+theme = ExtResource("1_flk0b")
+theme_override_font_sizes/font_size = 30
+text = "Display Mode:"
+
+[node name="DisplayModeSelector" type="OptionButton" parent="HBox/HBox/DisplayMode"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme = ExtResource("1_flk0b")
+theme_override_font_sizes/font_size = 20
+selected = 0
+item_count = 3
+popup/item_0/text = "Windowed"
+popup/item_1/text = "Borderless Fullscreen"
+popup/item_1/id = 1
+popup/item_2/text = "Fullscreen"
+popup/item_2/id = 2
+
+[node name="VSeparator" type="VSeparator" parent="HBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+theme_override_styles/separator = SubResource("StyleBoxLine_mkw77")
+
+[node name="HBox2" type="VBoxContainer" parent="HBox"]
+layout_mode = 2
+theme = ExtResource("1_flk0b")
+
+[node name="Label" type="Label" parent="HBox/HBox2"]
+layout_mode = 2
+text = "Audio:"
+
+[node name="MainAudio" type="HBoxContainer" parent="HBox/HBox2"]
+layout_mode = 2
+theme = ExtResource("1_flk0b")
+
+[node name="Label" type="Label" parent="HBox/HBox2/MainAudio"]
+layout_mode = 2
+theme = ExtResource("1_flk0b")
+theme_override_font_sizes/font_size = 30
+text = "Main:"
+
+[node name="VSeparator" type="VSeparator" parent="HBox/HBox2/MainAudio"]
+layout_mode = 2
+theme_override_constants/separation = 110
+theme_override_styles/separator = SubResource("StyleBoxEmpty_g7k5w")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox/HBox2/MainAudio"]
+layout_mode = 2
+
+[node name="MainVolume" type="HSlider" parent="HBox/HBox2/MainAudio/VBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("1_flk0b")
+value = 100.0
+rounded = true
+
+[node name="MainVolumeLabel" type="Label" parent="HBox/HBox2/MainAudio/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "100%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Music" type="HBoxContainer" parent="HBox/HBox2"]
+layout_mode = 2
+theme = ExtResource("1_flk0b")
+
+[node name="Label" type="Label" parent="HBox/HBox2/Music"]
+layout_mode = 2
+theme = ExtResource("1_flk0b")
+theme_override_font_sizes/font_size = 30
+text = "Music:"
+
+[node name="VSeparator" type="VSeparator" parent="HBox/HBox2/Music"]
+layout_mode = 2
+theme_override_constants/separation = 95
+theme_override_styles/separator = SubResource("StyleBoxEmpty_g7k5w")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBox/HBox2/Music"]
+layout_mode = 2
+
+[node name="MusicVolume" type="HSlider" parent="HBox/HBox2/Music/VBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 1
+theme = ExtResource("1_flk0b")
+value = 100.0
+rounded = true
+
+[node name="MusicVolumeLabel" type="Label" parent="HBox/HBox2/Music/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "100%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 20
+text = "Back"
+
+[connection signal="item_selected" from="HBox/HBox/Resolution/ResolutionSelector" to="." method="_on_resolution_selector_item_selected"]
+[connection signal="item_selected" from="HBox/HBox/DisplayMode/DisplayModeSelector" to="." method="_on_display_mode_selector_item_selected"]
+[connection signal="value_changed" from="HBox/HBox2/MainAudio/VBoxContainer/MainVolume" to="." method="_on_main_volume_value_changed"]
+[connection signal="value_changed" from="HBox/HBox2/Music/VBoxContainer/MusicVolume" to="." method="_on_music_volume_value_changed"]
+[connection signal="pressed" from="Button" to="." method="_on_back_button_pressed"]

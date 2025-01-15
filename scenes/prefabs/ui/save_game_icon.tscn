@@ -23,12 +23,11 @@ theme = ExtResource("1_vtsus")
 layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
-custom_minimum_size = Vector2(130, 130)
+custom_minimum_size = Vector2(230.1, 130)
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 0
+size_flags_vertical = 4
 texture = ExtResource("2_vlnw6")
-expand_mode = 2
+expand_mode = 3
 
 [node name="Label" type="Label" parent="VBoxContainer"]
 layout_mode = 2

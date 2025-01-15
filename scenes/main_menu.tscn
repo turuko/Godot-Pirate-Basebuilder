@@ -1,13 +1,13 @@
-[gd_scene load_steps=17 format=3 uid="uid://d2ldmkewrqcd8"]
+[gd_scene load_steps=15 format=3 uid="uid://d2ldmkewrqcd8"]
 
 [ext_resource type="Script" path="res://scripts/UI/Menus/main_menu_controller.gd" id="1_5idrw"]
 [ext_resource type="Texture2D" uid="uid://cx0cc2pk0fvjq" path="res://assets/UI/download.png" id="2_64jm7"]
 [ext_resource type="Script" path="res://scripts/UI/Menus/main_menu.gd" id="3_hx6q8"]
 [ext_resource type="Theme" uid="uid://hdsy7rphi8iq" path="res://themes/menu_theme.tres" id="3_k1tp6"]
 [ext_resource type="Texture2D" uid="uid://c42yohv35uatx" path="res://assets/UI/kenney/PNG/panel_brown.png" id="6_mj4if"]
-[ext_resource type="Script" path="res://scripts/UI/Menus/options_menu.gd" id="7_5q8pr"]
+[ext_resource type="PackedScene" uid="uid://duw0tgygyuvdc" path="res://scenes/prefabs/ui/options_menu.tscn" id="7_dp5be"]
 [ext_resource type="Script" path="res://scripts/UI/Menus/new_game_menu.gd" id="7_sdbs6"]
-[ext_resource type="Script" path="res://scripts/UI/Menus/load_game_menu.gd" id="8_y6iyv"]
+[ext_resource type="PackedScene" uid="uid://vpftqoplwb7a" path="res://scenes/prefabs/ui/load_game_menu.tscn" id="8_4rkn4"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_aqgr0"]
 font_size = 120
@@ -43,16 +43,6 @@ corner_radius_bottom_left = 4
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_o3rvc"]
 color = Color(0.717647, 0.556863, 0.403922, 1)
 thickness = 2
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g7k5w"]
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_mkw77"]
-content_margin_right = 3.0
-color = Color(0.717647, 0.556863, 0.403922, 1)
-grow_begin = 0.0
-grow_end = 0.0
-thickness = 3
-vertical = true
 
 [sub_resource type="Animation" id="Animation_mfi1g"]
 resource_name = "Title Scaling"
@@ -230,201 +220,16 @@ theme = ExtResource("3_k1tp6")
 theme_override_font_sizes/font_size = 20
 text = "Back"
 
-[node name="OptionsMenu" type="PanelContainer" parent="."]
+[node name="OptionsMenu" parent="." instance=ExtResource("7_dp5be")]
+layout_mode = 1
+offset_left = -408.5
+offset_right = 408.5
+
+[node name="LoadGameMenu" parent="." instance=ExtResource("8_4rkn4")]
 visible = false
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -334.0
-offset_top = -207.0
-offset_right = 336.0
-offset_bottom = 408.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("3_k1tp6")
-theme_override_styles/panel = SubResource("StyleBoxTexture_ngfvt")
-script = ExtResource("7_5q8pr")
-
-[node name="HBox" type="HBoxContainer" parent="OptionsMenu"]
-layout_mode = 2
-theme = ExtResource("3_k1tp6")
-
-[node name="HBox" type="VBoxContainer" parent="OptionsMenu/HBox"]
-layout_mode = 2
-theme = ExtResource("3_k1tp6")
-
-[node name="Label" type="Label" parent="OptionsMenu/HBox/HBox"]
-layout_mode = 2
-text = "Graphics:"
-
-[node name="Resolution" type="HBoxContainer" parent="OptionsMenu/HBox/HBox"]
-layout_mode = 2
-theme = ExtResource("3_k1tp6")
-
-[node name="Label" type="Label" parent="OptionsMenu/HBox/HBox/Resolution"]
-layout_mode = 2
-theme = ExtResource("3_k1tp6")
-theme_override_font_sizes/font_size = 30
-text = "Resolution:"
-
-[node name="VSeparator" type="VSeparator" parent="OptionsMenu/HBox/HBox/Resolution"]
-layout_mode = 2
-theme_override_constants/separation = 29
-theme_override_styles/separator = SubResource("StyleBoxEmpty_g7k5w")
-
-[node name="ResolutionSelector" type="OptionButton" parent="OptionsMenu/HBox/HBox/Resolution"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-theme = ExtResource("3_k1tp6")
-theme_override_font_sizes/font_size = 20
-
-[node name="DisplayMode" type="HBoxContainer" parent="OptionsMenu/HBox/HBox"]
-layout_mode = 2
-theme = ExtResource("3_k1tp6")
-
-[node name="Label" type="Label" parent="OptionsMenu/HBox/HBox/DisplayMode"]
-layout_mode = 2
-theme = ExtResource("3_k1tp6")
-theme_override_font_sizes/font_size = 30
-text = "Display Mode:"
-
-[node name="DisplayModeSelector" type="OptionButton" parent="OptionsMenu/HBox/HBox/DisplayMode"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-theme = ExtResource("3_k1tp6")
-theme_override_font_sizes/font_size = 20
-selected = 0
-item_count = 3
-popup/item_0/text = "Windowed"
-popup/item_1/text = "Borderless Fullscreen"
-popup/item_1/id = 1
-popup/item_2/text = "Fullscreen"
-popup/item_2/id = 2
-
-[node name="VSeparator" type="VSeparator" parent="OptionsMenu/HBox"]
-layout_mode = 2
-theme_override_constants/separation = 10
-theme_override_styles/separator = SubResource("StyleBoxLine_mkw77")
-
-[node name="HBox2" type="VBoxContainer" parent="OptionsMenu/HBox"]
-layout_mode = 2
-theme = ExtResource("3_k1tp6")
-
-[node name="Label" type="Label" parent="OptionsMenu/HBox/HBox2"]
-layout_mode = 2
-text = "Audio:"
-
-[node name="MainAudio" type="HBoxContainer" parent="OptionsMenu/HBox/HBox2"]
-layout_mode = 2
-theme = ExtResource("3_k1tp6")
-
-[node name="Label" type="Label" parent="OptionsMenu/HBox/HBox2/MainAudio"]
-layout_mode = 2
-theme = ExtResource("3_k1tp6")
-theme_override_font_sizes/font_size = 30
-text = "Main:"
-
-[node name="VSeparator" type="VSeparator" parent="OptionsMenu/HBox/HBox2/MainAudio"]
-layout_mode = 2
-theme_override_constants/separation = 110
-theme_override_styles/separator = SubResource("StyleBoxEmpty_g7k5w")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="OptionsMenu/HBox/HBox2/MainAudio"]
-layout_mode = 2
-
-[node name="MainVolume" type="HSlider" parent="OptionsMenu/HBox/HBox2/MainAudio/VBoxContainer"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-size_flags_vertical = 1
-theme = ExtResource("3_k1tp6")
-value = 100.0
-rounded = true
-
-[node name="MainVolumeLabel" type="Label" parent="OptionsMenu/HBox/HBox2/MainAudio/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 15
-text = "100%"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Music" type="HBoxContainer" parent="OptionsMenu/HBox/HBox2"]
-layout_mode = 2
-theme = ExtResource("3_k1tp6")
-
-[node name="Label" type="Label" parent="OptionsMenu/HBox/HBox2/Music"]
-layout_mode = 2
-theme = ExtResource("3_k1tp6")
-theme_override_font_sizes/font_size = 30
-text = "Music:"
-
-[node name="VSeparator" type="VSeparator" parent="OptionsMenu/HBox/HBox2/Music"]
-layout_mode = 2
-theme_override_constants/separation = 95
-theme_override_styles/separator = SubResource("StyleBoxEmpty_g7k5w")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="OptionsMenu/HBox/HBox2/Music"]
-layout_mode = 2
-
-[node name="MusicVolume" type="HSlider" parent="OptionsMenu/HBox/HBox2/Music/VBoxContainer"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-size_flags_vertical = 1
-theme = ExtResource("3_k1tp6")
-value = 100.0
-rounded = true
-
-[node name="MusicVolumeLabel" type="Label" parent="OptionsMenu/HBox/HBox2/Music/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 15
-text = "100%"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Button" type="Button" parent="OptionsMenu"]
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 8
-theme_override_font_sizes/font_size = 20
-text = "Back"
-
-[node name="LoadGameMenu" type="PanelContainer" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -334.0
-offset_top = -207.0
-offset_right = 336.0
-offset_bottom = 408.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("3_k1tp6")
-theme_override_styles/panel = SubResource("StyleBoxTexture_ngfvt")
-script = ExtResource("8_y6iyv")
-
-[node name="ScrollContainer" type="ScrollContainer" parent="LoadGameMenu"]
-custom_minimum_size = Vector2(0, 515)
-layout_mode = 2
-size_flags_vertical = 0
-
-[node name="GridContainer" type="GridContainer" parent="LoadGameMenu/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-columns = 4
-
-[node name="Button" type="Button" parent="LoadGameMenu"]
-layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 8
-theme_override_font_sizes/font_size = 20
-text = "Back"
+offset_left = -407.5
+offset_right = 407.5
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -437,9 +242,3 @@ libraries = {
 [connection signal="pressed" from="MainMenu/ExitButton" to="MainMenu" method="_on_exit_button_pressed"]
 [connection signal="pressed" from="NewGameMenu/VBoxContainer/StartNewGameButton" to="NewGameMenu" method="_on_start_new_game_button_pressed"]
 [connection signal="pressed" from="NewGameMenu/BackButton" to="NewGameMenu" method="_on_back_button_pressed"]
-[connection signal="item_selected" from="OptionsMenu/HBox/HBox/Resolution/ResolutionSelector" to="OptionsMenu" method="_on_resolution_selector_item_selected"]
-[connection signal="item_selected" from="OptionsMenu/HBox/HBox/DisplayMode/DisplayModeSelector" to="OptionsMenu" method="_on_display_mode_selector_item_selected"]
-[connection signal="value_changed" from="OptionsMenu/HBox/HBox2/MainAudio/VBoxContainer/MainVolume" to="OptionsMenu" method="_on_main_volume_value_changed"]
-[connection signal="value_changed" from="OptionsMenu/HBox/HBox2/Music/VBoxContainer/MusicVolume" to="OptionsMenu" method="_on_music_volume_value_changed"]
-[connection signal="pressed" from="OptionsMenu/Button" to="OptionsMenu" method="_on_back_button_pressed"]
-[connection signal="pressed" from="LoadGameMenu/Button" to="LoadGameMenu" method="_on_button_pressed"]

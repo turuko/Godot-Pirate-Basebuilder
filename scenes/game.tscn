@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://ba7xucig58at0"]
+[gd_scene load_steps=22 format=3 uid="uid://ba7xucig58at0"]
 
 [ext_resource type="Script" path="res://scripts/Controllers/camera_controller.gd" id="1_iyv6l"]
 [ext_resource type="Script" path="res://scripts/Controllers/tile_map_controller.gd" id="2_2fxs4"]
@@ -20,6 +20,7 @@
 [ext_resource type="Script" path="res://scripts/UI/ui_inspector_fixture.gd" id="16_g7rfg"]
 [ext_resource type="Script" path="res://scripts/UI/ui_inspector_item.gd" id="18_oo3b7"]
 [ext_resource type="PackedScene" uid="uid://n47l3i5fr1sb" path="res://scenes/bottom_bar.tscn" id="19_taedq"]
+[ext_resource type="PackedScene" uid="uid://dsge20v7pu42d" path="res://scenes/prefabs/ui/in_game_menu.tscn" id="21_uhtbk"]
 
 [node name="Game" type="Node2D"]
 
@@ -163,3 +164,5 @@ script = ExtResource("18_oo3b7")
 [node name="Control" parent="CanvasLayer" instance=ExtResource("19_taedq")]
 offset_top = -120.0
 offset_right = -326.0
+
+[node name="InGameMenu" parent="CanvasLayer" instance=ExtResource("21_uhtbk")]

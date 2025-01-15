@@ -1,0 +1,80 @@
+[gd_scene load_steps=3 format=3 uid="uid://dsge20v7pu42d"]
+
+[ext_resource type="Theme" uid="uid://hdsy7rphi8iq" path="res://themes/menu_theme.tres" id="1_555ci"]
+[ext_resource type="Script" path="res://scripts/UI/Menus/in_game_menu.gd" id="2_m6q8f"]
+
+[node name="InGameMenu" type="PanelContainer"]
+visible = false
+custom_minimum_size = Vector2(500, 650)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_555ci")
+script = ExtResource("2_m6q8f")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="SaveGameButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Save Game
+"
+
+[node name="LoadGameButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Load Game"
+
+[node name="OptionsButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Options"
+
+[node name="ExitMenuButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Exit to menu"
+
+[node name="ExitGameButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Exit Game"
+
+[node name="ReturnToGame" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Return to game"
+
+[node name="SaveGameMenu" type="PanelContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(815, 0)
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SaveGameMenu"]
+custom_minimum_size = Vector2(0, 515)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="GridContainer" type="GridContainer" parent="SaveGameMenu/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 3
+
+[node name="Button" type="Button" parent="SaveGameMenu"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 20
+text = "Back"

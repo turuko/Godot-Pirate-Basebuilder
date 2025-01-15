@@ -1,4 +1,4 @@
-extends PanelContainer
+class_name OptionsMenu extends PanelContainer
 
 @onready var menu_controller = $".."
 @onready var main_volume_label = $HBox/HBox2/MainAudio/VBoxContainer/MainVolumeLabel
@@ -7,6 +7,10 @@ extends PanelContainer
 @onready var resolution_selector = $HBox/HBox/Resolution/ResolutionSelector
 @onready var main_volume: HSlider = $HBox/HBox2/MainAudio/VBoxContainer/MainVolume
 @onready var music_volume: HSlider = $HBox/HBox2/Music/VBoxContainer/MusicVolume
+@onready var back_button: Button = $Button
+
+var set_back_con: bool = false
+var back_con: Callable
 
 const DISPLAY_MODES: Dictionary = {
 	DisplayServer.WINDOW_MODE_WINDOWED : 0,
@@ -18,7 +22,7 @@ const RESOLUTION_DICTIONARY: Dictionary = {
 	"1280 x 720"  : Vector2i(1280, 720),
 	"1600 x 900"  : Vector2i(1600, 900),
 	"1920 x 1080" : Vector2i(1920, 1080),
-	"3840 x 2160" : Vector2i(3840, 2160),	
+	"3840 x 2160" : Vector2i(3840, 2160),
 }
 
 func _ready():
@@ -27,6 +31,16 @@ func _ready():
 	set_current_resolution()
 	main_volume.value = Globals.main_volume
 	music_volume.value = Globals.music_volume
+	
+	if set_back_con:
+		for con in back_button.pressed.get_connections():
+			back_button.pressed.disconnect(con.callable)
+		back_button.pressed.connect(back_con)
+
+
+func set_back_connection(c: Callable):
+	set_back_con = true
+	back_con = c
 
 
 func add_resolution_options():

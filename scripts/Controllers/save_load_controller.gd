@@ -1,4 +1,4 @@
-class_name SaveLoadController extends Node
+extends Node
 
 var encryptor_script = preload("res://scripts/Utilities/Encryptor.cs")
 
@@ -52,9 +52,9 @@ func save_game(args: Array) -> void:
 	var save_zip = ZIPPacker.new()
 	
 	if FileAccess.file_exists(dir.get_current_dir() + "/" + str(args[0]) + ".zip"):
-		save_zip.open(dir.get_current_dir() + "/" + str(args[0]) + ".zip", ZIPPacker.APPEND_ADDINZIP)
-	else:
-		save_zip.open(dir.get_current_dir() + "/" + str(args[0]) + ".zip", ZIPPacker.APPEND_CREATE)
+		OS.move_to_trash(dir.get_current_dir() + "/" + str(args[0]) + ".zip")
+		
+	save_zip.open(dir.get_current_dir() + "/" + str(args[0]) + ".zip", ZIPPacker.APPEND_CREATE)
 		
 	#var save_file = FileAccess.open(dir.get_current_dir()+"/"+str(args[0]), FileAccess.WRITE)
 
@@ -85,8 +85,13 @@ func load_game(args: Array) -> void:
 	var save_zip = ZIPReader.new()
 	save_zip.open("user://SaveGames/" + str(args[0]) + ".zip")
 	
-	var save_file = FileAccess.open("user://SaveGames/"+str(args[0]), FileAccess.READ)
-	var json_string = save_file.get_as_text()
+	var zip_data := save_zip.read_file("data")
+	
+	var json_string = zip_data.get_string_from_utf8()
+	save_zip.close()
+	
+	#var save_file = FileAccess.open("user://SaveGames/"+str(args[0]), FileAccess.READ)
+	#var json_string = save_file.get_as_text()
 
 	if encrypt:
 		var encryptor = encryptor_script.new()

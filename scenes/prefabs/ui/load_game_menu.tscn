@@ -1,0 +1,88 @@
+[gd_scene load_steps=6 format=3 uid="uid://vpftqoplwb7a"]
+
+[ext_resource type="Theme" uid="uid://hdsy7rphi8iq" path="res://themes/menu_theme.tres" id="1_1rspf"]
+[ext_resource type="Texture2D" uid="uid://c42yohv35uatx" path="res://assets/UI/kenney/PNG/panel_brown.png" id="2_qixh2"]
+[ext_resource type="Script" path="res://scripts/UI/Menus/load_game_menu.gd" id="3_snudf"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ngfvt"]
+texture = ExtResource("2_qixh2")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_cqxsn"]
+color = Color(0.717647, 0.556863, 0.403922, 1)
+grow_begin = 0.0
+grow_end = 0.0
+thickness = 3
+vertical = true
+
+[node name="LoadGameMenu" type="PanelContainer"]
+custom_minimum_size = Vector2(815, 615)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -207.0
+offset_right = 415.0
+offset_bottom = 408.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_1rspf")
+theme_override_styles/panel = SubResource("StyleBoxTexture_ngfvt")
+script = ExtResource("3_snudf")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(0, 515)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(350, 515)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="GridContainer" type="VBoxContainer" parent="HBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_cqxsn")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(410, 231.638)
+layout_mode = 2
+size_flags_horizontal = 4
+expand_mode = 3
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+horizontal_alignment = 1
+
+[node name="LoadButton" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 20
+text = "Load"
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 20
+text = "Back"
+
+[connection signal="pressed" from="LoadButton" to="." method="_on_load_button_pressed"]
+[connection signal="pressed" from="BackButton" to="." method="_on_button_pressed"]
